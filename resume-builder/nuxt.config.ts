@@ -5,6 +5,6 @@ export default defineNuxtConfig({
             htmlAttrs: {dir: 'rtl', lang: 'fa'},
         },
     },
-    modules: ['@nuxtjs/tailwindcss'],
+    modules: ['@nuxtjs/tailwindcss', '@element-plus/nuxt'],
     css: ['~/assets/css/main.css'],
 })
