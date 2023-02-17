@@ -5,6 +5,9 @@ export default defineNuxtConfig({
             htmlAttrs: {dir: 'rtl', lang: 'fa'},
         },
     },
-    modules: ['@nuxtjs/tailwindcss', '@element-plus/nuxt'],
-    css: ['~/assets/css/main.css'],
+    modules: ['@nuxtjs/tailwindcss'],
+    css: ['~/assets/css/main.css', 'vuetify/lib/styles/main.sass', '@mdi/font/css/materialdesignicons.min.css'],
+    build: {
+        transpile: ['vuetify'],
+    },
 })

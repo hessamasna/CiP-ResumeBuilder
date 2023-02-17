@@ -1,7 +1,6 @@
 <template>
   <div>
-    <NuxtWelcome/>
-    <el-button type="primary">Primary</el-button>
+    <div class="text-red-darken-1 bg-slate-100">Test</div>
   </div>
 </template>
 
