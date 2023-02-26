@@ -13,8 +13,11 @@
   },
   "dependencies": {
     "@mdi/font": "^7.1.96",
+    "@heroicons/vue": "^2.0.13",
+    "nuxt-headlessui": "^1.1.1",
     "sass": "^1.58.2",
     "tailwindcss-rtl": "^0.9.0",
-    "vuetify": "^3.1.4"
+    "vuetify": "^3.1.4",
+    "vue": "^3.2.45"
   }
 }
