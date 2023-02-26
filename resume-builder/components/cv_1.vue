@@ -6,7 +6,7 @@
           <img :src="image"
                class="max-w-full h-auto mx-auto rounded-full bg-gray-50 grayscale mb-4" alt="title image">
         </div>
-        <div class="flex flex-column">
+        <div >
           <div class="mb-8">
             <span class="title">تحصیلات</span>
             <div class="divider_custom"></div>
