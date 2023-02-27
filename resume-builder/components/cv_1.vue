@@ -144,7 +144,7 @@ export default {
           startDate: '2021',
           endDate: '2022',
           place: "Sharif",
-          description: "lorem"
+          description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem explicabo impedit magni reiciendis suscipit! Adipisci deleniti earum eveniet incidunt ipsa libero modi, molestiae nobis pariatur quod repellat, repudiandae rerum sit!"
         },
         {
           title: 'توسعه دهنده فرانت',
@@ -170,25 +170,24 @@ export default {
       ],
       educations: [
         {
-          title: "Computer",
-          place: "Sharif",
-          degree: "BSC",
-          startDate: "2022",
-          endDate: "2023",
+          title: "مهندسی کامپیوتر",
+          place: "صنعتی شریف",
+          degree: "کارشناسی",
+          startDate: "1398",
+          endDate: "1402",
         },
         {
-          title: "Computer#2",
-          place: "Sharif#2",
-          degree: "BSC",
-          startDate: "2022",
-          endDate: "2023",
-        }
+          title: "مهندسی کامپیوتر",
+          place: "صنعتی شریف",
+          degree: "کارشناسی ارشد",
+          startDate: "1402",
+          endDate: "1406",
+        },
       ]
     }
   },
 }
 </script>
-
 <style lang="scss" scoped>
 .title {
   font-size: 1.5rem;
