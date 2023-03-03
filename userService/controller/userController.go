@@ -1,9 +1,6 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt"
-	"golang.org/x/crypto/bcrypt"
 	"net/http"
 	"os"
 	"regexp"
@@ -12,6 +9,10 @@ import (
 	"userService/errors"
 	"userService/service"
 	"userService/util"
+
+	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func Signup(c *gin.Context) {
