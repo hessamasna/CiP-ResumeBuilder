@@ -3,7 +3,7 @@ package dto
 type UserDto struct {
 	User_id       int    `json:"user_id"`
 	Email         string `json:"email"`
-	Password_hash string `json:"password_hash"`
+	Password_hash string `json:"password"`
 	Phone_number  string `json:"phone_number"`
 	Gender        string `json:"gender"`
 	First_name    string `json:"first_name"`
