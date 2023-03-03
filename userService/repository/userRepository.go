@@ -27,7 +27,7 @@ func AddUser(userDto dto.UserDto) (*dto.UserDto, *errors.Base_error) {
 func FindUserByEmail(email string) (*dto.UserDto, *errors.Base_error) {
 	var user entities.User
 	initializers.DB.First(&user, "email = ?", email)
-	if user.User_id == 0 {
+	if user.ID == 0 {
 		return nil, nil
 	}
 	var result dto.UserDto
@@ -43,7 +43,7 @@ func FindUserByEmail(email string) (*dto.UserDto, *errors.Base_error) {
 func FindUserByPhoneNumber(phoneNumber string) (*dto.UserDto, *errors.Base_error) {
 	var user entities.User
 	initializers.DB.First(&user, "phone_number = ?", phoneNumber)
-	if user.User_id == 0 {
+	if user.ID == 0 {
 		return nil, nil
 	}
 	var result dto.UserDto
@@ -57,8 +57,8 @@ func FindUserByPhoneNumber(phoneNumber string) (*dto.UserDto, *errors.Base_error
 
 func FindUserById(id int) (*dto.UserDto, *errors.Base_error){
 	var user entities.User
-	initializers.DB.First(&user, "user_id = ?", id)
-	if user.User_id == 0 {
+	initializers.DB.First(&user, "ID = ?", id)
+	if user.ID == 0 {
 		return nil, nil
 	}
 		var result dto.UserDto
