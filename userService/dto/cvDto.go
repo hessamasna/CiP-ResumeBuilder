@@ -2,11 +2,11 @@ package dto
 
 type CVDto struct {
 	ID           int              `json:"id"`
-	User_id      uint             `json:"user_id"`
+	UserID       uint             `json:"user_id"`
 	PersonalInfo PersonalInfoDto  `json:"personal_info"`
 	About_me     string           `json:"about_me"`
-	Educations    []EducationDto   `json:"education"`
-	Experiences   []ExperienceDto  `json:"experience"`
+	Educations   []EducationDto   `json:"education"`
+	Experiences  []ExperienceDto  `json:"experience"`
 	Skills       []SkillDto       `json:"skills"`
 	SocialMedias []SocialMediaDto `json:"social_medias"`
 }
