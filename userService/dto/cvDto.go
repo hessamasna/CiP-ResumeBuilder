@@ -1,11 +1,12 @@
 package dto
 
 type CVDto struct {
-
+	ID           int              `json:"id"`
+	User_id      uint             `json:"user_id"`
 	PersonalInfo PersonalInfoDto  `json:"personal_info"`
-	About_me     string        `json:"about_me"`
-	Education    []EducationDto   `json:"education"`
-	Experience   []ExperienceDto  `json:"experience"`
+	About_me     string           `json:"about_me"`
+	Educations    []EducationDto   `json:"education"`
+	Experiences   []ExperienceDto  `json:"experience"`
 	Skills       []SkillDto       `json:"skills"`
 	SocialMedias []SocialMediaDto `json:"social_medias"`
 }
@@ -39,9 +40,9 @@ type ExperienceDto struct {
 }
 
 type SkillDto struct {
-	CVID        uint   `json:"cv_id"`
-	Name        string `json:"name"`
-	Percent     int    `json:"percent"`
+	CVID    uint   `json:"cv_id"`
+	Name    string `json:"name"`
+	Percent int    `json:"percent"`
 }
 
 type SocialMediaDto struct {
@@ -49,4 +50,3 @@ type SocialMediaDto struct {
 	PlatForm string `json:"plat_form"`
 	Link     string `json:"link"`
 }
-
