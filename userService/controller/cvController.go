@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"strconv"
 	"userService/dto"
 	"userService/errors"
 	"userService/service"
@@ -24,6 +25,31 @@ func CreateCv(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{})
+
+}
+
+func GetCvsByUserId(c *gin.Context) {
+	// user_id := c.Param("user_id")
+	idString := c.Param("user_id")
+    user_id, err := strconv.Atoi(idString)
+    if err != nil {
+		base_error := errors.New_Invalid_request_error("user id must be an integer." , err).Error
+		c.JSON(http.StatusBadRequest, gin.H{
+			"result": dto.Create_http_response(http.StatusBadRequest, nil, base_error),
+		})
+
+		return    }
+	result, error := service.Get_cvs_by_user_id(user_id)
+
+	if error != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"result": dto.Create_http_response(error.Error_code, nil, error),
+		})
+
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"result": result})
 
 }
 
