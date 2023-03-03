@@ -48,6 +48,7 @@ func main() {
 	r.POST("auth/refresh", controller.RefreshAccessToken)
 	r.POST("/auth/logout", controller.Logout)
 	r.POST("/cv/create" , controller.CreateCv)
+	r.GET("cv/get/:user_id" , controller.GetCvsByUserId)
 	r.Run()
 
 }
