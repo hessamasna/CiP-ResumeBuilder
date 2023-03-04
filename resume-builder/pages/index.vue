@@ -16,6 +16,7 @@
       </div>
     </div>
     <Cv_1/>
+    <Cv_4/>
   </div>
 </template>
 
