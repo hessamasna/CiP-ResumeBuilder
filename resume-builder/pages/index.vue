@@ -16,12 +16,17 @@
       </div>
     </div>
     <Cv_1/>
+
     <Cv_4/>
+
+    <CV2/>
+
   </div>
 </template>
 
 <script setup>
 
+import CV2 from "../components/cv_2.vue";
 import Cv_1 from "../components/cv_1";
 </script>
 
