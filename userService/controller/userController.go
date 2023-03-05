@@ -168,7 +168,7 @@ func RefreshAccessToken(c *gin.Context) {
 	// sub := claims["sub"].(string)
 	sub := int(claims["sub"].(float64))
 	// subInt, err := strconv.Atoi(sub)
-	
+
 	// if err != nil {
 	// 	c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": "fail", "message": err_message})
 	// 	return
@@ -209,6 +209,44 @@ func Logout(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"status": "success"})
 
+}
+
+func GetCurrentUser(c *gin.Context) {
+	err := util.Check_if_is_login(c, "access_token")
+	if err != nil {
+		c.JSON(err.Error_code, gin.H{
+			"result": dto.Create_http_response(err.Error_code, nil, err),
+		})
+		return
+	}
+	token, err := util.ReadTokenFromCookie(c, "access_token")
+	if err != nil {
+		c.JSON(err.Error_code, gin.H{
+			"result": dto.Create_http_response(err.Error_code, nil, err),
+		})
+		return
+	}
+	sub, err := util.ExtractSubFromToken(token)
+	if err != nil {
+		c.JSON(err.Error_code, gin.H{
+			"result": dto.Create_http_response(err.Error_code, nil, err),
+		})
+		return
+	}
+	result, err := service.Get_user_by_id(sub)
+	if err != nil {
+		c.JSON(err.Error_code, gin.H{
+			"result": dto.Create_http_response(err.Error_code, nil, err),
+		})
+		return
+	}
+	result.PasswordHash = "*******"
+	c.JSON(200, gin.H{
+		"result": dto.Create_http_response(
+			200,
+			result,
+			nil),
+	})
 }
 
 func validate_user(c *gin.Context, userDto dto.UserDto) *dto.UserDto {
