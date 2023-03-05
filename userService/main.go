@@ -16,38 +16,37 @@ func init() {
 	go grpc_init.StartGrpcServer()
 }
 
-
 func CORSMiddleware() gin.HandlerFunc {
-    return func(c *gin.Context) {
-        c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-        c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-        c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, Origin, Accept")
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, Origin, Accept")
 
-        if c.Request.Method == "OPTIONS" {
-            c.AbortWithStatus(http.StatusNoContent)
-            return
-        }
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(http.StatusNoContent)
+			return
+		}
 
-        c.Next()
-    }
+		c.Next()
+	}
 }
 
 func main() {
 	r := gin.Default()
 
-	    // Add CORS middleware
+	// Add CORS middleware
 	r.Use(CORSMiddleware())
 
 	r.POST("auth/signup", controller.Signup)
 	r.POST("auth/login", controller.Signin)
 	r.POST("auth/refresh", controller.RefreshAccessToken)
 	r.POST("/auth/logout", controller.Logout)
-
-	r.POST("/cv/create" , controller.CreateCv)
-	r.GET("cv/getAll/:user_id" , controller.GetCvsByUserId)
-	r.GET("cv/get/:id" , controller.GetCvById)
-	r.PUT("cv/update" , controller.UpdateCv)
-	r.DELETE("cv/delete/:id" , controller.DeleteCv)
+	r.GET("/auth/me", controller.GetCurrentUser)
+	r.POST("/cv/create", controller.CreateCv)
+	r.GET("cv/getAll/:user_id", controller.GetCvsByUserId)
+	r.GET("cv/get/:id", controller.GetCvById)
+	r.PUT("cv/update", controller.UpdateCv)
+	r.DELETE("cv/delete/:id", controller.DeleteCv)
 	r.Run()
 
 }
