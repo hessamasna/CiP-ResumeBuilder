@@ -22,20 +22,22 @@ func ExtractToken(tokenStr string) (jwt.MapClaims, error) {
 	return claims, nil
 }
 
-func ExtractSubFromToken(tokenStr string) (int, error) {
+func ExtractSubFromToken(tokenStr string) (int, *errors.Base_error) {
 	token, err := jwt.Parse(tokenStr, func(t *jwt.Token) (interface{}, error) {
 		return []byte(os.Getenv("SECRET")), nil
 	})
 	if err != nil {
-		return 0, err
+		return 0, errors.New_internal_error(err.Error() , err).Error
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		return 0, fmt.Errorf("could not parse claims")
+		error := fmt.Errorf("could not parse claims")
+		return 0, errors.New_internal_error(error.Error() , error).Error
 	}
 	subFloat64, ok := claims["sub"].(float64)
 	if !ok {
-		return 0, fmt.Errorf("could not parse sub")
+		error := fmt.Errorf("could not parse sub")
+		return 0, errors.New_internal_error(error.Error() , error).Error
 	}
 	sub := int(subFloat64)
 	return sub, nil
@@ -87,7 +89,7 @@ func CheckCurrentUserHasAccess(c *gin.Context, id int) *errors.Base_error{
 	}
 	sub , error := ExtractSubFromToken(token)
 	if error != nil {
-		return errors.New_internal_error(err.Error , error).Error
+		return error
 	}
 	if sub != id {
 		return errors.New_authorization_error("You don't have access to this request" , nil).Error
