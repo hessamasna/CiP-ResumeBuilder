@@ -54,20 +54,43 @@ func ValidateToken(tokenStr string) (bool, string) {
 }
 
 func Check_if_is_login(c *gin.Context, token_name string) *errors.Base_error {
-	cookie, err := c.Cookie(token_name)
-	if len(cookie) == 0 {
-		error_message := "Failed to read " + token_name
-		return errors.New_authorization_error(error_message, nil).Error
-	}
-
+	cookie, err := ReadTokenFromCookie(c, token_name)
 	if err != nil {
-		return errors.New_authorization_error(err.Error(), err).Error
+		return err
 	}
 
 	isValid, err_message := ValidateToken(cookie)
 	if !isValid {
 		return errors.New_authorization_error(err_message, nil).Error
 
+	}
+	return nil
+}
+
+func ReadTokenFromCookie(c *gin.Context, token_name string) (string, *errors.Base_error) {
+	cookie, err := c.Cookie(token_name)
+	if len(cookie) == 0 {
+		error_message := "Failed to read " + token_name
+		return "", errors.New_authorization_error(error_message, nil).Error
+	}
+
+	if err != nil {
+		return "", errors.New_internal_error(err.Error(), err).Error
+	}
+	return cookie, nil
+}
+
+func CheckCurrentUserHasAccess(c *gin.Context, id int) *errors.Base_error{
+	token, err := ReadTokenFromCookie(c, "access_token")
+	if err != nil {
+		return err 
+	}
+	sub , error := ExtractSubFromToken(token)
+	if error != nil {
+		return errors.New_internal_error(err.Error , error).Error
+	}
+	if sub != id {
+		return errors.New_authorization_error("You don't have access to this request" , nil).Error
 	}
 	return nil
 }
