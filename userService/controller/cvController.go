@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 	"userService/dto"
@@ -84,7 +83,6 @@ func GetCvById(c *gin.Context) {
 func UpdateCv(c *gin.Context) {
 	var cvDto dto.CVDto
 	cvDto = *validate_cv(c, cvDto)
-	fmt.Printf("id is %d\n" , cvDto.ID)
 
 	error := service.UpdateCv(cvDto)
 	if error != nil {
@@ -97,6 +95,31 @@ func UpdateCv(c *gin.Context) {
 
 	c.JSON(http.StatusNoContent, gin.H{})
 
+}
+
+
+func DeleteCv(c *gin.Context) {
+	idString := c.Param("id")
+	id, err := strconv.Atoi(idString)
+
+	if err != nil {
+		base_error := errors.New_Invalid_request_error("user id must be an integer.", err).Error
+		c.JSON(http.StatusBadRequest, gin.H{
+			"result": dto.Create_http_response(http.StatusBadRequest, nil, base_error),
+		})
+
+		return
+	}
+
+	error := service.DeleteCv(id)
+	if error != nil {
+		c.JSON(error.Error_code, gin.H{
+			"result": dto.Create_http_response(error.Error_code, nil, error),
+		})
+
+		return
+	}
+	c.JSON(http.StatusNoContent, gin.H{})
 }
 
 func validate_cv(c *gin.Context, cvDto dto.CVDto) *dto.CVDto {

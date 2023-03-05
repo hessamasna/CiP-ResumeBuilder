@@ -72,3 +72,16 @@ func UpdateCv(cvDto dto.CVDto) *errors.Base_error {
 	}
 	return nil
 }
+
+
+func DeleteCv(id int) *errors.Base_error {
+	if id == 0 {
+		error_message := "User ID must be specified"
+		return errors.New_Invalid_request_error(error_message, nil).Error
+	}
+	error := repository.DeleteCvByID(id)
+	if error != nil {
+		return error
+	}
+	return nil
+}

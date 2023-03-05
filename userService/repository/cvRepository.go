@@ -460,7 +460,7 @@ func UpdateEducation(educationDto dto.EducationDto) *errors.Base_error {
 		return errors.New_internal_error("Failed to map dto to entity", err).Error
 	}
 
-	result := initializers.DB.Model(&education).Where("ID = ?" , educationDto.ID).Updates(&education)
+	result := initializers.DB.Model(&education).Where("ID = ?", educationDto.ID).Updates(&education)
 	if result.Error != nil {
 		return errors.New_internal_error("Failed to update education", result.Error).Error
 	}
@@ -479,7 +479,7 @@ func UpdateSkill(skillDto dto.SkillDto) *errors.Base_error {
 		return errors.New_internal_error("Failed to map dto to entity", err).Error
 	}
 
-	result := initializers.DB.Model(&skill).Where("ID = ?" , skillDto.ID).Updates(&skill)
+	result := initializers.DB.Model(&skill).Where("ID = ?", skillDto.ID).Updates(&skill)
 	if result.Error != nil {
 		return errors.New_internal_error("Failed to update skill", result.Error).Error
 	}
@@ -498,7 +498,7 @@ func UpdateExperience(experienceDto dto.ExperienceDto) *errors.Base_error {
 		return errors.New_internal_error("Failed to map dto to entity", err).Error
 	}
 
-	result := initializers.DB.Model(&experience).Where("ID = ?" , experienceDto.ID).Updates(&experience)
+	result := initializers.DB.Model(&experience).Where("ID = ?", experienceDto.ID).Updates(&experience)
 	if result.Error != nil {
 		return errors.New_internal_error("Failed to update experience", result.Error).Error
 	}
@@ -517,7 +517,7 @@ func UpdateSocialMedia(socialMediaDto dto.SocialMediaDto) *errors.Base_error {
 		return errors.New_internal_error("Failed to map dto to entity", err).Error
 	}
 
-	result := initializers.DB.Model(&socialMedia).Where("ID = ?" , socialMedia.ID).Updates(&socialMedia)
+	result := initializers.DB.Model(&socialMedia).Where("ID = ?", socialMedia.ID).Updates(&socialMedia)
 	if result.Error != nil {
 		return errors.New_internal_error("Failed to update social media", result.Error).Error
 	}
@@ -564,3 +564,280 @@ func UpdateExperiences(experienceDtos []dto.ExperienceDto) *errors.Base_error {
 	}
 	return nil
 }
+
+func DeleteCvByID(id int) *errors.Base_error {
+	var cv entities.CV
+	err := initializers.DB.Where("id = ?", id).First(&cv).Error
+	if cv.ID == 0 {
+		error_message := fmt.Sprintf("CV with ID %v not found", id)
+		return errors.New_entity_does_not_exist_error(error_message, nil).Error
+	}
+	if err != nil {
+		error_message := fmt.Sprintf("Failed to retrieve CV with ID %v from database", id)
+		return errors.New_internal_error(error_message, err).Error
+	}
+
+	skills, error := GetAllSkillsByCVID(uint(id))
+	if error != nil {
+		return error
+	}
+	educations, error := GetAllEducationsByCVID(uint(id))
+	if error != nil {
+		return error
+	}
+	experiences, error := GetAllExperiencesByCVID(uint(id))
+	if error != nil {
+		return error
+	}
+	social_medias, error := GetAllSocialMediasByCVID(uint(id))
+	if error != nil {
+		return error
+	}
+
+
+	error = DeleteEducationList(educations)
+	if error != nil {
+		return error
+	}
+
+	error = DeleteExperienceList(experiences)
+	if error != nil {
+		return error
+	}
+
+	error = DeleteSkillList(skills)
+	if error != nil {
+		return error
+	}
+
+	error = DeleteSocialMediaList(social_medias)
+	if error != nil {
+		return error
+	}
+	tx := initializers.DB.Begin()
+	if err := tx.Delete(&cv).Error; err != nil {
+		tx.Rollback()
+		error_message := fmt.Sprintf("Failed to delete CV with ID %v from database", id)
+		return errors.New_internal_error(error_message, err).Error
+	}
+
+	if err := tx.Commit().Error; err != nil {
+		error_message := fmt.Sprintf("Failed to commit transaction for deleting CV with ID %v from database", id)
+		return errors.New_internal_error(error_message, err).Error
+	}
+	return nil
+}
+
+func DeleteEducationByID(id uint) *errors.Base_error {
+	var education entities.Education
+	err := initializers.DB.Where("id = ?", id).First(&education).Error
+	if education.ID == 0 {
+		error_message := fmt.Sprintf("Education with ID %v not found", id)
+		return errors.New_entity_does_not_exist_error(error_message, nil).Error
+	}
+	if err != nil {
+		error_message := fmt.Sprintf("Failed to retrieve Education with ID %v from database", id)
+		return errors.New_internal_error(error_message, err).Error
+	}
+
+	tx := initializers.DB.Begin()
+	if err := tx.Delete(&education).Error; err != nil {
+		tx.Rollback()
+		error_message := fmt.Sprintf("Failed to delete Education with ID %v from database", id)
+		return errors.New_internal_error(error_message, err).Error
+	}
+
+	if err := tx.Commit().Error; err != nil {
+		error_message := fmt.Sprintf("Failed to commit transaction for deleting Education with ID %v from database", id)
+		return errors.New_internal_error(error_message, err).Error
+	}
+	return nil
+}
+
+func DeleteExperienceByID(id uint) *errors.Base_error {
+	var experience entities.Experience
+	err := initializers.DB.Where("id = ?", id).First(&experience).Error
+	if experience.ID == 0 {
+		error_message := fmt.Sprintf("Experience with ID %v not found", id)
+		return errors.New_entity_does_not_exist_error(error_message, nil).Error
+	}
+	if err != nil {
+		error_message := fmt.Sprintf("Failed to retrieve Experience with ID %v from database", id)
+		return errors.New_internal_error(error_message, err).Error
+	}
+
+	tx := initializers.DB.Begin()
+	if err := tx.Delete(&experience).Error; err != nil {
+		tx.Rollback()
+		error_message := fmt.Sprintf("Failed to delete Experience with ID %v from database", id)
+		return errors.New_internal_error(error_message, err).Error
+	}
+
+	if err := tx.Commit().Error; err != nil {
+		error_message := fmt.Sprintf("Failed to commit transaction for deleting Experience with ID %v from database", id)
+		return errors.New_internal_error(error_message, err).Error
+	}
+	return nil
+}
+
+func DeleteSkillByID(id uint) *errors.Base_error {
+	var skill entities.Skill
+	err := initializers.DB.Where("id = ?", id).First(&skill).Error
+	if skill.ID == 0 {
+		error_message := fmt.Sprintf("Skill with ID %v not found", id)
+		return errors.New_entity_does_not_exist_error(error_message, nil).Error
+	}
+	if err != nil {
+		error_message := fmt.Sprintf("Failed to retrieve Skill with ID %v from database", id)
+		return errors.New_internal_error(error_message, err).Error
+	}
+
+	tx := initializers.DB.Begin()
+	if err := tx.Delete(&skill).Error; err != nil {
+		tx.Rollback()
+		error_message := fmt.Sprintf("Failed to delete Skill with ID %v from database", id)
+		return errors.New_internal_error(error_message, err).Error
+	}
+
+	if err := tx.Commit().Error; err != nil {
+		error_message := fmt.Sprintf("Failed to commit transaction for deleting Skill with ID %v from database", id)
+		return errors.New_internal_error(error_message, err).Error
+	}
+	return nil
+}
+
+func DeleteSocialMediaByID(id uint) *errors.Base_error {
+	var socialMedia entities.SocialMedia
+	err := initializers.DB.Where("id = ?", id).First(&socialMedia).Error
+	if socialMedia.ID == 0 {
+		error_message := fmt.Sprintf("SocialMedia with ID %v not found", id)
+		return errors.New_entity_does_not_exist_error(error_message, nil).Error
+	}
+	if err != nil {
+		error_message := fmt.Sprintf("Failed to retrieve SocialMedia with ID %v from database", id)
+		return errors.New_internal_error(error_message, err).Error
+	}
+
+	tx := initializers.DB.Begin()
+	if err := tx.Delete(&socialMedia).Error; err != nil {
+		tx.Rollback()
+		error_message := fmt.Sprintf("Failed to delete SocialMedia with ID %v from database", id)
+		return errors.New_internal_error(error_message, err).Error
+	}
+
+	if err := tx.Commit().Error; err != nil {
+		error_message := fmt.Sprintf("Failed to commit transaction for deleting SocialMedia with ID %v from database", id)
+		return errors.New_internal_error(error_message, err).Error
+	}
+	return nil
+}
+
+func DeleteSocialMediaList(socialMediaDTOs []dto.SocialMediaDto) *errors.Base_error {
+	var socialMediaIDs []uint
+
+	// Extract social media IDs from the DTO list
+	for _, dto := range socialMediaDTOs {
+		socialMediaIDs = append(socialMediaIDs, uint(dto.ID))
+	}
+
+	// Start a database transaction
+	tx := initializers.DB.Begin()
+
+	// Delete social media entities based on their IDs
+	if err := tx.Where("id IN (?)", socialMediaIDs).Delete(&entities.SocialMedia{}).Error; err != nil {
+		tx.Rollback()
+		error_message := "Failed to delete SocialMedia entities from database"
+		return errors.New_internal_error(error_message, err).Error
+	}
+
+	// Commit the transaction
+	if err := tx.Commit().Error; err != nil {
+		error_message := "Failed to commit transaction for deleting SocialMedia entities from database"
+		return errors.New_internal_error(error_message, err).Error
+	}
+
+	return nil
+}
+
+
+func DeleteExperienceList(experienceDTOs []dto.ExperienceDto) *errors.Base_error {
+	var experienceIDs []uint
+
+	// Extract experience IDs from the DTO list
+	for _, dto := range experienceDTOs {
+		experienceIDs = append(experienceIDs, uint(dto.ID))
+	}
+
+	// Start a database transaction
+	tx := initializers.DB.Begin()
+
+	// Delete experience entities based on their IDs
+	if err := tx.Where("id IN (?)", experienceIDs).Delete(&entities.Experience{}).Error; err != nil {
+		tx.Rollback()
+		error_message := "Failed to delete Experience entities from database"
+		return errors.New_internal_error(error_message, err).Error
+	}
+
+	// Commit the transaction
+	if err := tx.Commit().Error; err != nil {
+		error_message := "Failed to commit transaction for deleting Experience entities from database"
+		return errors.New_internal_error(error_message, err).Error
+	}
+
+	return nil
+}
+
+func DeleteSkillList(skillDTOs []dto.SkillDto) *errors.Base_error {
+	var skillIDs []uint
+
+	// Extract skill IDs from the DTO list
+	for _, dto := range skillDTOs {
+		skillIDs = append(skillIDs, uint(dto.ID))
+	}
+
+	// Start a database transaction
+	tx := initializers.DB.Begin()
+
+	// Delete skill entities based on their IDs
+	if err := tx.Where("id IN (?)", skillIDs).Delete(&entities.Skill{}).Error; err != nil {
+		tx.Rollback()
+		error_message := "Failed to delete Skill entities from database"
+		return errors.New_internal_error(error_message, err).Error
+	}
+
+	// Commit the transaction
+	if err := tx.Commit().Error; err != nil {
+		error_message := "Failed to commit transaction for deleting Skill entities from database"
+		return errors.New_internal_error(error_message, err).Error
+	}
+
+	return nil
+}
+
+func DeleteEducationList(educationDTOs []dto.EducationDto) *errors.Base_error {
+	var educationIDs []uint
+
+	// Extract education IDs from the DTO list
+	for _, dto := range educationDTOs {
+		educationIDs = append(educationIDs, uint(dto.ID))
+	}
+
+	// Start a database transaction
+	tx := initializers.DB.Begin()
+
+	// Delete education entities based on their IDs
+	if err := tx.Where("id IN (?)", educationIDs).Delete(&entities.Education{}).Error; err != nil {
+		tx.Rollback()
+		error_message := "Failed to delete Education entities from database"
+		return errors.New_internal_error(error_message, err).Error
+	}
+
+	// Commit the transaction
+	if err := tx.Commit().Error; err != nil {
+		error_message := "Failed to commit transaction for deleting Education entities from database"
+		return errors.New_internal_error(error_message, err).Error
+	}
+
+	return nil
+}
+

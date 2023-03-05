@@ -47,6 +47,7 @@ func main() {
 	r.GET("cv/getAll/:user_id" , controller.GetCvsByUserId)
 	r.GET("cv/get/:id" , controller.GetCvById)
 	r.PUT("cv/update" , controller.UpdateCv)
+	r.DELETE("cv/delete/:id" , controller.DeleteCv)
 	r.Run()
 
 }
