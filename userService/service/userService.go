@@ -14,8 +14,7 @@ func AddUser(userDto dto.UserDto) (*dto.UserDto, *errors.Base_error) {
 	if error != nil {
 		return nil, error
 	}
-
-	u2, error := repository.FindUserByPhoneNumber(userDto.Phone_number)
+	u2, error := repository.FindUserByPhoneNumber(userDto.PhoneNumber)
 
 	if error != nil {
 		return nil, error
@@ -27,7 +26,7 @@ func AddUser(userDto dto.UserDto) (*dto.UserDto, *errors.Base_error) {
 			nil).Error
 	}
 	// add user to db
-	_, err := repository.AddUser(userDto)
+	_, err := repository.CreateUser(userDto)
 	if err != nil {
 		//TODO log error
 		return nil, err

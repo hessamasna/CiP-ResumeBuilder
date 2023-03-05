@@ -6,7 +6,7 @@ type User struct {
 	gorm.Model
 	Email        string `gorm:"unique"`
 	PasswordHash string
-	PhoneNumber string `gorm:"unique;not null"`
+	PhoneNumber  string `gorm:"unique;not null"`
 	Gender       string
 	FirstName    string
 	LastName     string
@@ -14,13 +14,21 @@ type User struct {
 
 type CV struct {
 	gorm.Model
-	UserID        uint          `json:"user_id" gorm:"not null"`
-	PersonalInfo  PersonalInfo  `json:"personal_info" gorm:"embedded;embeddedPrefix:personal_info_"`
-	AboutMe       string        `json:"about_me"`
+	UserID         uint         `json:"user_id" gorm:"not null"`
+	PersonalInfo   PersonalInfo `json:"personal_info" gorm:"embedded;embeddedPrefix:personal_info_"`
+	AboutMe        string       `json:"about_me"`
+	Name           string       `json:"name" gorm:"not null"`
+	IsPublic       bool         `json:"is_public" gorm:"not null;default:false"`
+	FontSize       int          `json:"font_size" gorm:"not null"`
+	FontFamily     string       `json:"font_family" gorm:"not null"`
+	Color          string       `json:"color" gorm:"not null"`
+	TemplateNumber int          `json:"template_number" gorm:"not null"`
+
 	// Education     []Education   `json:"education" `
 	// Experience    []Experience  `json:"experience" `
 	// Skills        []Skill       `json:"skills" `
 	// SocialMedias  []SocialMedia `json:"social_medias" `
+
 }
 
 type PersonalInfo struct {

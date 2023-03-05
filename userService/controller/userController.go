@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 	"regexp"
@@ -23,16 +24,18 @@ func Signup(c *gin.Context) {
 		return
 	}
 
-	if len(userDto.Phone_number) == 0 {
+	fmt.Print("user pass is : " + userDto.PasswordHash)
+
+	if len(userDto.PhoneNumber) == 0 {
 		error := errors.New_Invalid_request_error("Phone number cannot be empty.", nil).Error
 		result := dto.Create_http_response(error.Error_code, nil, error)
 		c.JSON(error.Error_code, gin.H{
 			"result": result,
 		})
-		return 
+		return
 	}
 	//hash the password
-	hash, err := bcrypt.GenerateFromPassword([]byte(userDto.Password_hash), 10)
+	hash, err := bcrypt.GenerateFromPassword([]byte(userDto.PasswordHash), 10)
 
 	if err != nil {
 		error := errors.New_hashing_error(err).Error
@@ -43,7 +46,7 @@ func Signup(c *gin.Context) {
 		return
 	}
 
-	userDto.Password_hash = string(hash)
+	userDto.PasswordHash = string(hash)
 
 	//add user
 	_, error := service.AddUser(userDto)
@@ -75,8 +78,7 @@ func Signin(c *gin.Context) {
 
 		return
 	}
-
-	error := bcrypt.CompareHashAndPassword([]byte(result.Password_hash), []byte(userDto.Password_hash))
+	error := bcrypt.CompareHashAndPassword([]byte(result.PasswordHash), []byte(userDto.PasswordHash))
 
 	if error != nil {
 		c.JSON(400, gin.H{
@@ -88,7 +90,7 @@ func Signin(c *gin.Context) {
 		return
 	}
 	access_token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"sub": result.User_id,
+		"sub": result.ID,
 		"exp": time.Now().Add(time.Hour).Unix(),
 	})
 	accessTokenString, error := access_token.SignedString([]byte(os.Getenv("SECRET")))
@@ -105,7 +107,7 @@ func Signin(c *gin.Context) {
 	}
 
 	refresh_token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"sub": result.User_id,
+		"sub": result.ID,
 		"exp": time.Now().Add(time.Hour * 12).Unix(),
 	})
 	refreshTokenString, error := refresh_token.SignedString([]byte(os.Getenv("SECRET")))
@@ -221,7 +223,6 @@ func validate_user(c *gin.Context, userDto dto.UserDto) *dto.UserDto {
 		})
 		return nil
 	}
-	
 
 	//Check email regex
 	re := regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
@@ -236,7 +237,7 @@ func validate_user(c *gin.Context, userDto dto.UserDto) *dto.UserDto {
 	}
 
 	//check if password is empty
-	if len(userDto.Password_hash) == 0 {
+	if len(userDto.PasswordHash) == 0 {
 		error := errors.New_Invalid_request_error("Password cannot be empty", nil).Error
 		result := dto.Create_http_response(error.Error_code, nil, error)
 		c.JSON(error.Error_code, gin.H{
