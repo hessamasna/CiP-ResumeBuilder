@@ -58,5 +58,17 @@ func Get_cv_by_id(id int) (*dto.CVDto, *errors.Base_error) {
 		return nil, error
 	}
 
-	return cvDto , nil
+	return cvDto, nil
+}
+
+func UpdateCv(cvDto dto.CVDto) *errors.Base_error {
+	if cvDto.ID == 0 {
+		error_message := "User ID must be specified"
+		return errors.New_Invalid_request_error(error_message, nil).Error
+	}
+	_, error := repository.UpdateCv(cvDto)
+	if error != nil {
+		return error
+	}
+	return nil
 }

@@ -241,7 +241,6 @@ func AddCv(cvDto dto.CVDto) (*dto.CVDto, *errors.Base_error) {
 	return &cvDto, nil
 }
 
-
 func GetCVsByUserId(userId int) ([]dto.CVDto, *errors.Base_error) {
 	var cvEntities []entities.CV
 	err := initializers.DB.Where("user_id = ?", userId).Find(&cvEntities).Error
@@ -410,4 +409,158 @@ func GetAllSocialMediasByCVID(cvid uint) ([]dto.SocialMediaDto, *errors.Base_err
 	}
 
 	return socialMediaDtos, nil
+}
+
+func UpdateCv(cvDto dto.CVDto) (*dto.CVDto, *errors.Base_error) {
+	var cv entities.CV
+	err := initializers.Mapper.Map(&cv, cvDto)
+	if err != nil {
+		return nil, errors.New_internal_error("Failed to map dto to entity", err).Error
+	}
+
+	result := initializers.DB.Model(&cv).Updates(&cv)
+	if result.Error != nil {
+		return nil, errors.New_internal_error("Failed to update CV", result.Error).Error
+	}
+
+	if result.RowsAffected == 0 {
+		return nil, errors.New_entity_does_not_exist_error("CV not found", nil).Error
+	}
+
+	error := UpdateSkills(cvDto.Skills)
+	if error != nil {
+		return nil, error
+	}
+	error = UpdateExperiences(cvDto.Experiences)
+	if error != nil {
+		return nil, error
+	}
+	error = UpdateEducations(cvDto.Educations)
+	if error != nil {
+		return nil, error
+	}
+	error = UpdateSocialMedias(cvDto.SocialMedias)
+	if error != nil {
+		return nil, error
+	}
+	// Retrieve the updated CV entity
+	// var updatedCvDto dto.CVDto
+	updatedCvDto, error := GetCvById(int(cv.ID))
+	if error != nil {
+		return nil, error
+	}
+	return updatedCvDto, error
+
+}
+
+func UpdateEducation(educationDto dto.EducationDto) *errors.Base_error {
+	var education entities.Education
+	err := initializers.Mapper.Map(&education, educationDto)
+	if err != nil {
+		return errors.New_internal_error("Failed to map dto to entity", err).Error
+	}
+
+	result := initializers.DB.Model(&education).Where("ID = ?" , educationDto.ID).Updates(&education)
+	if result.Error != nil {
+		return errors.New_internal_error("Failed to update education", result.Error).Error
+	}
+
+	if result.RowsAffected == 0 {
+		return errors.New_entity_does_not_exist_error("Education not found", nil).Error
+	}
+
+	return nil
+}
+
+func UpdateSkill(skillDto dto.SkillDto) *errors.Base_error {
+	var skill entities.Skill
+	err := initializers.Mapper.Map(&skill, skillDto)
+	if err != nil {
+		return errors.New_internal_error("Failed to map dto to entity", err).Error
+	}
+
+	result := initializers.DB.Model(&skill).Where("ID = ?" , skillDto.ID).Updates(&skill)
+	if result.Error != nil {
+		return errors.New_internal_error("Failed to update skill", result.Error).Error
+	}
+
+	if result.RowsAffected == 0 {
+		return errors.New_entity_does_not_exist_error("Skill not found", nil).Error
+	}
+
+	return nil
+}
+
+func UpdateExperience(experienceDto dto.ExperienceDto) *errors.Base_error {
+	var experience entities.Experience
+	err := initializers.Mapper.Map(&experience, experienceDto)
+	if err != nil {
+		return errors.New_internal_error("Failed to map dto to entity", err).Error
+	}
+
+	result := initializers.DB.Model(&experience).Where("ID = ?" , experienceDto.ID).Updates(&experience)
+	if result.Error != nil {
+		return errors.New_internal_error("Failed to update experience", result.Error).Error
+	}
+
+	if result.RowsAffected == 0 {
+		return errors.New_entity_does_not_exist_error("Experience not found", nil).Error
+	}
+
+	return nil
+}
+
+func UpdateSocialMedia(socialMediaDto dto.SocialMediaDto) *errors.Base_error {
+	var socialMedia entities.SocialMedia
+	err := initializers.Mapper.Map(&socialMedia, socialMediaDto)
+	if err != nil {
+		return errors.New_internal_error("Failed to map dto to entity", err).Error
+	}
+
+	result := initializers.DB.Model(&socialMedia).Where("ID = ?" , socialMedia.ID).Updates(&socialMedia)
+	if result.Error != nil {
+		return errors.New_internal_error("Failed to update social media", result.Error).Error
+	}
+
+	if result.RowsAffected == 0 {
+		return errors.New_entity_does_not_exist_error("Social media not found", nil).Error
+	}
+
+	return nil
+}
+
+func UpdateSkills(skillDtos []dto.SkillDto) *errors.Base_error {
+	for _, skillDto := range skillDtos {
+		if err := UpdateSkill(skillDto); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func UpdateEducations(educationDtos []dto.EducationDto) *errors.Base_error {
+	for _, educationDto := range educationDtos {
+		if err := UpdateEducation(educationDto); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func UpdateSocialMedias(social_medias []dto.SocialMediaDto) *errors.Base_error {
+	for _, social_media := range social_medias {
+		if err := UpdateSocialMedia(social_media); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func UpdateExperiences(experienceDtos []dto.ExperienceDto) *errors.Base_error {
+	for _, expDto := range experienceDtos {
+		if err := UpdateExperience(expDto); err != nil {
+			return err
+		}
+	}
+	return nil
 }

@@ -28,11 +28,6 @@ func CORSMiddleware() gin.HandlerFunc {
             return
         }
 
-        // if c.Request.Header.Get("Content-Type") != "application/json" {
-        //     c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid request content type. Expected JSON."})
-        //     return
-        // }
-
         c.Next()
     }
 }
@@ -51,6 +46,7 @@ func main() {
 	r.POST("/cv/create" , controller.CreateCv)
 	r.GET("cv/getAll/:user_id" , controller.GetCvsByUserId)
 	r.GET("cv/get/:id" , controller.GetCvById)
+	r.PUT("cv/update" , controller.UpdateCv)
 	r.Run()
 
 }

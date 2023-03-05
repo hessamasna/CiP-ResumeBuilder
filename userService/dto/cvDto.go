@@ -12,6 +12,7 @@ type CVDto struct {
 }
 
 type PersonalInfoDto struct {
+	ID          int    `json:"id"`
 	FirstName   string `json:"first_name"`
 	LastName    string `json:"last_name"`
 	Email       string `json:"email"`
@@ -20,6 +21,7 @@ type PersonalInfoDto struct {
 }
 
 type EducationDto struct {
+	ID       int    `json:"id"`
 	CVID     uint   `json:"cv_id"`
 	Degree   string `json:"degree"`
 	Major    string `json:"major"`
@@ -30,6 +32,7 @@ type EducationDto struct {
 }
 
 type ExperienceDto struct {
+	ID          int    `json:"id"`
 	CVID        uint   `json:"cv_id"`
 	Title       string `json:"title"`
 	Company     string `json:"company"`
@@ -40,12 +43,14 @@ type ExperienceDto struct {
 }
 
 type SkillDto struct {
+	ID      int    `json:"id"`
 	CVID    uint   `json:"cv_id"`
 	Name    string `json:"name"`
 	Percent int    `json:"percent"`
 }
 
 type SocialMediaDto struct {
+	ID       int    `json:"id"`
 	CVID     uint   `json:"cv_id"`
 	PlatForm string `json:"plat_form"`
 	Link     string `json:"link"`
