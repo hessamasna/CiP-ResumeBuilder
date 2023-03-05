@@ -1,16 +1,23 @@
 package controller
 
 import (
+	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
 	"userService/dto"
 	"userService/errors"
 	"userService/service"
-
-	"github.com/gin-gonic/gin"
+	"userService/util"
 )
 
 func CreateCv(c *gin.Context) {
+	err := util.Check_if_is_login(c, "access_token")
+	if err != nil {
+		c.JSON(err.Error_code, gin.H{
+			"result": dto.Create_http_response(err.Error_code, nil, err),
+		})
+		return
+	}
 	var cvDto dto.CVDto
 	cvDto = *validate_cv(c, cvDto)
 
@@ -30,6 +37,14 @@ func CreateCv(c *gin.Context) {
 
 func GetCvsByUserId(c *gin.Context) {
 	// user_id := c.Param("user_id")
+	
+	err1 := util.Check_if_is_login(c, "access_token")
+	if err1 != nil {
+		c.JSON(err1.Error_code, gin.H{
+			"result": dto.Create_http_response(err1.Error_code, nil, err1),
+		})
+		return 
+	}
 	idString := c.Param("user_id")
 	user_id, err := strconv.Atoi(idString)
 	if err != nil {
@@ -81,6 +96,13 @@ func GetCvById(c *gin.Context) {
 }
 
 func UpdateCv(c *gin.Context) {
+	err1 := util.Check_if_is_login(c, "access_token")
+	if err1 != nil {
+		c.JSON(err1.Error_code, gin.H{
+			"result": dto.Create_http_response(err1.Error_code, nil, err1),
+		})
+		return 
+	}
 	var cvDto dto.CVDto
 	cvDto = *validate_cv(c, cvDto)
 
@@ -97,8 +119,14 @@ func UpdateCv(c *gin.Context) {
 
 }
 
-
 func DeleteCv(c *gin.Context) {
+	err1 := util.Check_if_is_login(c, "access_token")
+	if err1 != nil {
+		c.JSON(err1.Error_code, gin.H{
+			"result": dto.Create_http_response(err1.Error_code, nil, err1),
+		})
+		return 
+	}
 	idString := c.Param("id")
 	id, err := strconv.Atoi(idString)
 
