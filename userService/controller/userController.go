@@ -143,7 +143,7 @@ func RefreshAccessToken(c *gin.Context) {
 			"result": dto.Create_http_response(
 				400,
 				nil,
-				errors.New_Invalid_request_error("Failed to read  access token or you are not login", nil).Error),
+				errors.New_Invalid_request_error("Failed to read  refresh token", nil).Error),
 		})
 
 		return
@@ -165,7 +165,16 @@ func RefreshAccessToken(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"status": "fail", "message": err_message})
 		return
 	}
-	sub := int(claims["sub"].(int))
+	// sub := claims["sub"].(string)
+	sub := int(claims["sub"].(float64))
+	// subInt, err := strconv.Atoi(sub)
+	
+	// if err != nil {
+	// 	c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": "fail", "message": err_message})
+	// 	return
+	// }
+
+	// access_token, err := createAccessToken(subInt)
 	access_token, err := createAccessToken(sub)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
