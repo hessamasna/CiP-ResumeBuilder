@@ -114,6 +114,9 @@ func AddSocialMedia(socialMediaDto dto.SocialMediaDto) (*dto.SocialMediaDto, *er
 }
 
 func AddEducationList(eduList []dto.EducationDto, cvID uint) *errors.Base_error {
+	if eduList == nil{
+		return nil
+	}
 	var eduEntities []entities.Education
 	for _, edu := range eduList {
 		eduEntity := entities.Education{
@@ -143,6 +146,9 @@ func AddEducationList(eduList []dto.EducationDto, cvID uint) *errors.Base_error 
 }
 
 func AddExperienceList(experiences []dto.ExperienceDto, cvID uint) *errors.Base_error {
+	if experiences == nil {
+		return nil
+	}
 	tx := initializers.DB.Begin()
 	for _, experienceDto := range experiences {
 		experience := entities.Experience{
@@ -166,6 +172,9 @@ func AddExperienceList(experiences []dto.ExperienceDto, cvID uint) *errors.Base_
 }
 
 func AddSkillList(skills []dto.SkillDto, cvID uint) *errors.Base_error {
+	if skills == nil {
+		return nil
+	}
 	tx := initializers.DB.Begin()
 	for _, skillDto := range skills {
 		skill := entities.Skill{
@@ -185,6 +194,9 @@ func AddSkillList(skills []dto.SkillDto, cvID uint) *errors.Base_error {
 }
 
 func AddSocialMediaList(socialMedias []dto.SocialMediaDto, cvID uint) *errors.Base_error {
+	if socialMedias == nil {
+		return nil
+	}
 	tx := initializers.DB.Begin()
 	for _, socialMediaDto := range socialMedias {
 		socialMedia := entities.SocialMedia{
@@ -530,6 +542,9 @@ func UpdateSocialMedia(socialMediaDto dto.SocialMediaDto) *errors.Base_error {
 }
 
 func UpdateSkills(skillDtos []dto.SkillDto) *errors.Base_error {
+	if skillDtos == nil || len(skillDtos) == 0 {
+		return nil
+	}
 	for _, skillDto := range skillDtos {
 		if err := UpdateSkill(skillDto); err != nil {
 			return err
@@ -539,6 +554,9 @@ func UpdateSkills(skillDtos []dto.SkillDto) *errors.Base_error {
 }
 
 func UpdateEducations(educationDtos []dto.EducationDto) *errors.Base_error {
+	if educationDtos == nil || len(educationDtos) == 0 {
+		return nil
+	}
 	for _, educationDto := range educationDtos {
 		if err := UpdateEducation(educationDto); err != nil {
 			return err
@@ -548,6 +566,9 @@ func UpdateEducations(educationDtos []dto.EducationDto) *errors.Base_error {
 }
 
 func UpdateSocialMedias(social_medias []dto.SocialMediaDto) *errors.Base_error {
+	if social_medias == nil || len(social_medias) == 0 {
+		return nil
+	}
 	for _, social_media := range social_medias {
 		if err := UpdateSocialMedia(social_media); err != nil {
 			return err
@@ -557,6 +578,9 @@ func UpdateSocialMedias(social_medias []dto.SocialMediaDto) *errors.Base_error {
 }
 
 func UpdateExperiences(experienceDtos []dto.ExperienceDto) *errors.Base_error {
+	if experienceDtos == nil || len(experienceDtos) == 0 {
+		return nil
+	}
 	for _, expDto := range experienceDtos {
 		if err := UpdateExperience(expDto); err != nil {
 			return err
@@ -733,6 +757,9 @@ func DeleteSocialMediaByID(id uint) *errors.Base_error {
 }
 
 func DeleteSocialMediaList(socialMediaDTOs []dto.SocialMediaDto) *errors.Base_error {
+	if socialMediaDTOs == nil || len(socialMediaDTOs) == 0 {
+		return nil
+	}
 	var socialMediaIDs []uint
 
 	// Extract social media IDs from the DTO list
@@ -761,6 +788,9 @@ func DeleteSocialMediaList(socialMediaDTOs []dto.SocialMediaDto) *errors.Base_er
 
 
 func DeleteExperienceList(experienceDTOs []dto.ExperienceDto) *errors.Base_error {
+	if experienceDTOs == nil || len(experienceDTOs) == 0 {
+		return nil
+	}
 	var experienceIDs []uint
 
 	// Extract experience IDs from the DTO list
@@ -788,6 +818,9 @@ func DeleteExperienceList(experienceDTOs []dto.ExperienceDto) *errors.Base_error
 }
 
 func DeleteSkillList(skillDTOs []dto.SkillDto) *errors.Base_error {
+	if skillDTOs == nil || len(skillDTOs) == 0 {
+		return nil
+	}
 	var skillIDs []uint
 
 	// Extract skill IDs from the DTO list
@@ -815,6 +848,9 @@ func DeleteSkillList(skillDTOs []dto.SkillDto) *errors.Base_error {
 }
 
 func DeleteEducationList(educationDTOs []dto.EducationDto) *errors.Base_error {
+	if educationDTOs == nil || len(educationDTOs) == 0 {
+		return nil
+	}
 	var educationIDs []uint
 
 	// Extract education IDs from the DTO list

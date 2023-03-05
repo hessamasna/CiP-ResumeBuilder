@@ -1,14 +1,20 @@
 package dto
 
 type CVDto struct {
-	ID           int              `json:"id"`
-	UserID       uint             `json:"user_id"`
-	PersonalInfo PersonalInfoDto  `json:"personal_info"`
-	About_me     string           `json:"about_me"`
-	Educations   []EducationDto   `json:"education"`
-	Experiences  []ExperienceDto  `json:"experience"`
-	Skills       []SkillDto       `json:"skills"`
-	SocialMedias []SocialMediaDto `json:"social_medias"`
+	ID             int              `json:"id"`
+	UserID         uint             `json:"user_id"`
+	PersonalInfo   PersonalInfoDto  `json:"personal_info"`
+	About_me       string           `json:"about_me"`
+	Educations     []EducationDto   `json:"education"`
+	Experiences    []ExperienceDto  `json:"experience"`
+	Skills         []SkillDto       `json:"skills"`
+	SocialMedias   []SocialMediaDto `json:"social_medias"`
+	Name           string           `json:"name"`
+	IsPublic       bool             `json:"is_public"`
+	FontSize       int              `json:"font_size"`
+	FontFamily     string           `json:"font_family"`
+	Color          string           `json:"color"`
+	TemplateNumber int              `json:"template_number"`
 }
 
 type PersonalInfoDto struct {
