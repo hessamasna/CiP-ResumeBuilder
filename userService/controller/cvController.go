@@ -11,6 +11,7 @@ import (
 )
 
 func CreateCv(c *gin.Context) {
+	//check if user is login
 	err := util.Check_if_is_login(c, "access_token")
 	if err != nil {
 		c.JSON(err.Error_code, gin.H{
@@ -18,9 +19,18 @@ func CreateCv(c *gin.Context) {
 		})
 		return
 	}
+	//read cvDto
 	var cvDto dto.CVDto
 	cvDto = *validate_cv(c, cvDto)
-
+	//validate authorization
+	err = util.CheckCurrentUserHasAccess(c , int(cvDto.UserID))
+	if err != nil {
+		c.JSON(err.Error_code, gin.H{
+			"result": dto.Create_http_response(err.Error_code, nil, err),
+		})
+		return
+	}
+	// adding cv 
 	_, error := service.AddCv(cvDto)
 
 	if error != nil {
@@ -47,6 +57,7 @@ func GetCvsByUserId(c *gin.Context) {
 	}
 	idString := c.Param("user_id")
 	user_id, err := strconv.Atoi(idString)
+
 	if err != nil {
 		base_error := errors.New_Invalid_request_error("user id must be an integer.", err).Error
 		c.JSON(http.StatusBadRequest, gin.H{
