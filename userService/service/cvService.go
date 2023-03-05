@@ -46,3 +46,17 @@ func Get_cvs_by_user_id(id int) ([]dto.CVDto, *errors.Base_error) {
 	}
 	return repository.GetCVsByUserId(id)
 }
+
+func Get_cv_by_id(id int) (*dto.CVDto, *errors.Base_error) {
+	if id == 0 {
+		error_message := "User ID must be specified"
+		return nil, errors.New_Invalid_request_error(error_message, nil).Error
+	}
+	cvDto, error := repository.GetCvById(id)
+
+	if error != nil || cvDto == nil {
+		return nil, error
+	}
+
+	return cvDto , nil
+}

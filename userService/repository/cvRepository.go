@@ -241,15 +241,6 @@ func AddCv(cvDto dto.CVDto) (*dto.CVDto, *errors.Base_error) {
 	return &cvDto, nil
 }
 
-// func GetAllCVsByUserID(userID uint) ([]entities.CV, error) {
-//     var cvs []entities.CV
-//     err := initializers.DB.Where("user_id = ?", userID).Find(&cvs).Error
-//     if err != nil {
-//         return nil, err
-//     }
-
-//     return cvs, nil
-// }
 
 func GetCVsByUserId(userId int) ([]dto.CVDto, *errors.Base_error) {
 	var cvEntities []entities.CV
@@ -262,21 +253,21 @@ func GetCVsByUserId(userId int) ([]dto.CVDto, *errors.Base_error) {
 	var cvDtos []dto.CVDto
 	for _, cvEntity := range cvEntities {
 		cvid := cvEntity.ID
-		skills , err  := GetAllSkillsByCVID(cvid)
+		skills, err := GetAllSkillsByCVID(cvid)
 		if err != nil {
-			return nil , err
+			return nil, err
 		}
-		educations , err  := GetAllEducationsByCVID(cvid)
+		educations, err := GetAllEducationsByCVID(cvid)
 		if err != nil {
-			return nil , err
+			return nil, err
 		}
-		experiences , err  := GetAllExperiencesByCVID(cvid)
+		experiences, err := GetAllExperiencesByCVID(cvid)
 		if err != nil {
-			return nil , err
+			return nil, err
 		}
-		social_medias , err  := GetAllSocialMediasByCVID(cvid)
+		social_medias, err := GetAllSocialMediasByCVID(cvid)
 		if err != nil {
-			return nil , err
+			return nil, err
 		}
 		var cvDto dto.CVDto
 		er1 := initializers.Mapper.Map(&cvDto, cvEntity)
@@ -291,6 +282,48 @@ func GetCVsByUserId(userId int) ([]dto.CVDto, *errors.Base_error) {
 	}
 
 	return cvDtos, nil
+}
+
+func GetCvById(id int) (*dto.CVDto, *errors.Base_error) {
+	var cv entities.CV
+	error := initializers.DB.Where("id = ?", id).First(&cv).Error
+	if cv.ID == 0 {
+		error_message := fmt.Sprintf("Cv with id : %d does not exist.", id)
+		return nil, errors.New_entity_does_not_exist_error(error_message, nil).Error
+	}
+	if error != nil {
+		error_message := fmt.Sprintf("Error getting CV with ID %d", id)
+		return nil, errors.New_internal_error(error_message, error).Error
+	}
+
+	var cvDto dto.CVDto
+	if err := initializers.Mapper.Map(&cvDto, &cv); err != nil {
+		error_message := fmt.Sprintf("Error mapping CV with ID %d to DTO", id)
+		return nil, errors.New_internal_error(error_message, err).Error
+	}
+
+	skills, err := GetAllSkillsByCVID(cv.ID)
+	if err != nil {
+		return nil, err
+	}
+	educations, err := GetAllEducationsByCVID(cv.ID)
+	if err != nil {
+		return nil, err
+	}
+	experiences, err := GetAllExperiencesByCVID(cv.ID)
+	if err != nil {
+		return nil, err
+	}
+	social_medias, err := GetAllSocialMediasByCVID(cv.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	cvDto.Educations = educations
+	cvDto.Skills = skills
+	cvDto.Experiences = experiences
+	cvDto.SocialMedias = social_medias
+	return &cvDto, nil
 }
 
 func GetCVsByUserIdWithPagination(userID uint, page, size int) ([]dto.CVDto, *errors.Base_error) {
@@ -323,26 +356,9 @@ func GetCVsByUserIdWithPagination(userID uint, page, size int) ([]dto.CVDto, *er
 
 }
 
-
-// func GetAllEducationsForCV(cvid int) ([]dto.EducationDto, *errors.Base_error) {
-// 	var educations []entities.Education
-// 	err := initializers.DB.Where("cv_id = ?", cvid).Find(&educations).Error
-// 	if err != nil {
-// 		return nil, errors.New_internal_error("Failed to get educations for CV", err).Error
-// 	}
-
-// 	var educationDtos []dto.EducationDto
-// 	err = initializers.Mapper.Map(&educationDtos, educations)
-// 	if err != nil {
-// 		return nil, errors.New_internal_error("Failed to map entity to dto", err).Error
-// 	}
-
-// 	return educationDtos, nil
-// }
-
 func GetAllEducationsByCVID(cvid uint) ([]dto.EducationDto, *errors.Base_error) {
 	var educations []entities.Education
-	if 	err := initializers.DB.Where("cv_id = ?", cvid).Find(&educations).Error; err != nil {
+	if err := initializers.DB.Where("cv_id = ?", cvid).Find(&educations).Error; err != nil {
 		return nil, errors.New_internal_error("Failed to get educations for CV", err).Error
 	}
 
@@ -353,7 +369,6 @@ func GetAllEducationsByCVID(cvid uint) ([]dto.EducationDto, *errors.Base_error) 
 
 	return educationDtos, nil
 }
-
 
 func GetAllExperiencesByCVID(cvid uint) ([]dto.ExperienceDto, *errors.Base_error) {
 	var experiences []entities.Experience
@@ -396,40 +411,3 @@ func GetAllSocialMediasByCVID(cvid uint) ([]dto.SocialMediaDto, *errors.Base_err
 
 	return socialMediaDtos, nil
 }
-
-
-
-func FindCVById(id int) (*dto.CVDto, *errors.Base_error) {
-	var cvEntity entities.CV
-	cv := initializers.DB.Preload("PersonalInfo").Preload("Education").Preload("Experience").Preload("Skills").Preload("SocialMedias").First(&cvEntity, id)
-	// initializers.DB.First(&cvEntity, "ID = ?", id)
-	if cv.Error != nil {
-		// fmt.Print(cv.Error)
-		return nil, nil
-	}
-	if cvEntity.ID == 0 {
-		return nil, nil
-	}
-	var result dto.CVDto
-	err := initializers.Mapper.Map(&result, cvEntity)
-	if err != nil {
-		//TODO log error
-		return nil, errors.New_internal_error("Failed to map entity to dto", err).Error
-	}
-	return &result, nil
-}
-
-// func FindAllCVByUserId(id int) (*dto.CVDto, *errors.Base_error) {
-// 	var cvEntity entities.CV
-// 	initializers.DB.First(&cvEntity, "user_id = ?", id)
-// 	if cvEntity.ID == 0 {
-// 		return nil, nil
-// 	}
-// 	var result dto.CVDto
-// 	err := initializers.Mapper.Map(&result, cvEntity)
-// 	if err != nil {
-// 		//TODO log error
-// 		return nil, errors.New_internal_error("Failed to map entity to dto", err).Error
-// 	}
-// 	return &result, nil
-// }
