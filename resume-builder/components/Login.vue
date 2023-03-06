@@ -67,9 +67,10 @@
               </div>
 
             </div>
+            <div class="text-center mt-4 text-red">{{ loginError }}</div>
           </div>
           <button
-              class=" mt-10 rounded-xl text-white align-middle bg-green-500 py-2" @click="login()">
+              class=" mt-8 rounded-xl text-white align-middle bg-green-500 py-2" @click="login()">
             ورود
           </button>
         </div>
@@ -101,7 +102,7 @@ export default {
         return;
       }
 
-      let api = 'http://localhost:3000/auth/logout'
+      let api = 'http://localhost:3000/auth/login'
       let body = {
         Email: this.username,
         Password: this.password
@@ -114,11 +115,20 @@ export default {
         //todo save in vueX
         this.showPasswordError = false;
         this.showUsernameError = false;
+        // localStorage.setItem("token",JSON.stringify(res.result.Data));
+
+        // token.isLoggedIn = true;
+        // token.access_token = res.result.Data.access_token;
+        // token.refresh_token = res.result.Data.refresh_token;
+        // token.Email = this.username;
+
+        this.loginError = '';
         this.$emit('successLogin')
       }).catch(error => {
         this.showPasswordError = true;
         this.showUsernameError = true;
         console.log(error)
+        this.loginError = 'در ورود مشکلی به وجود آمده است';
       })
 
     }
@@ -129,7 +139,8 @@ export default {
       showPasswordError: false,
       showPassword: false,
       username: '',
-      password: ''
+      password: '',
+      loginError: '',
     }
   },
 }
