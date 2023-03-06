@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <loading class="h-screen" v-if="loading"/>
     <div class="flex flex-row pa-12" :style="'font-family: '+ data.font+ '!important'" v-else>
       <div class="basis-1/3 bg-neutral-800 text-white py-10 pr-5">
@@ -18,9 +18,15 @@
                 </div>
                 <div class="flex flex-column mr-2" :style="'font-size: '+data.fontSize+'px'">
 
-                  <span class="text-lg font-weight-bold" :style="'font-size: '+data.fontSize+'px'">{{ education.title }}</span>
-                  <span class="text-sm" :style="'font-size: '+data.fontSize+'px'">{{ education.place }} {{ education.degree }}</span>
-                  <span class="text-sm" :style="'font-size: '+data.fontSize+'px'">{{ education.startDate }} - {{ education.endDate }}</span>
+                  <span class="text-lg font-weight-bold" :style="'font-size: '+data.fontSize+'px'">{{
+                      education.title
+                    }}</span>
+                  <span class="text-sm" :style="'font-size: '+data.fontSize+'px'">{{
+                      education.place
+                    }} {{ education.degree }}</span>
+                  <span class="text-sm" :style="'font-size: '+data.fontSize+'px'">{{
+                      education.startDate
+                    }} - {{ education.endDate }}</span>
                 </div>
               </div>
             </div>
@@ -29,7 +35,8 @@
             <span class="title">شبکه های اجتماعی</span>
             <div class="divider_custom" :style="'background-color: '+data.color"></div>
             <div :style="'font-size: '+data.fontSize+'px'">
-              <div v-for="(social, index) in data.personal.social" :key="index" class="flex mb-2 mr-6 align-center center">
+              <div v-for="(social, index) in data.personal.social" :key="index"
+                   class="flex mb-2 mr-6 align-center center">
                 <v-icon>mdi-{{ social.title }}</v-icon>
                 <NuxtLink :to="social.url" target="_blank" class=" mx-3">
                   {{ social.path }}
@@ -62,8 +69,12 @@
       </div>
       <div class="basis-3/4 pb-5">
         <div class="pr-5 py-16" :style="'background-color: '+data.color">
-          <div class="text-5xl font-weight-bold" :style="'font-size: '+titleFontSize(data.fontSize) +'px'">{{ data.personal.name }}</div>
-          <div class="text-2xl font-weight-thin pt-2 text-stone-700" :style="'font-size: '+data.fontSize+'px'">{{ data.personal.cvTitle }}</div>
+          <div class="text-5xl font-weight-bold" :style="'font-size: '+titleFontSize(data.fontSize) +'px'">
+            {{ data.personal.name }}
+          </div>
+          <div class="text-2xl font-weight-thin pt-2 text-stone-700" :style="'font-size: '+data.fontSize+'px'">
+            {{ data.personal.cvTitle }}
+          </div>
         </div>
         <div class="px-5">
 
@@ -79,10 +90,13 @@
               <div>
                 <v-icon :color="data.color">mdi-square-small</v-icon>
               </div>
-              <div class="flex flex-column mr-2" >
-                <div class="text-lg font-weight-bold" :style="'font-size: '+data.fontSize+'px'" >{{ work.title }}</div>
-                <div class="text-sm" :style="'font-size: '+data.fontSize+'px'" >{{ work.place }}</div>
-                <div class="text-sm" :style="'font-size: '+data.fontSize+'px'">{{ work.startDate }} - {{ work.endDate }}</div>
+              <div class="flex flex-column mr-2">
+                <div class="text-lg font-weight-bold" :style="'font-size: '+data.fontSize+'px'">{{ work.title }}</div>
+                <div class="text-sm" :style="'font-size: '+data.fontSize+'px'">{{ work.place }}</div>
+                <div class="text-sm" :style="'font-size: '+data.fontSize+'px'">{{ work.startDate }} - {{
+                    work.endDate
+                  }}
+                </div>
                 <div class="text-sm" :style="'font-size: '+data.fontSize+'px'"> {{ work.description }}</div>
               </div>
             </div>
@@ -90,7 +104,7 @@
           <div>
             <div class="title">مهارت ها</div>
             <div class="divider_custom" :style="'background-color: '+data.color"></div>
-            <div class="grid grid-cols-4 gap-4" >
+            <div class="grid grid-cols-4 gap-4">
 
               <div v-for="(skill,index) in data.skills" :key="index" class="px-5 ">
                 <div class="font-weight-bold" :style="'font-size: '+data.fontSize+'px'">
@@ -115,9 +129,9 @@
 export default {
   name: "cv_1",
   props: ['data', 'loading'],
-  methods:{
-    titleFontSize(int){
-      return int+10;
+  methods: {
+    titleFontSize(int) {
+      return Number(int) + 10;
     },
   },
   data() {

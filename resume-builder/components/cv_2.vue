@@ -4,7 +4,8 @@
     <div class="pa-12 pt-2" :style="'font-family: '+ data.font+ '!important'" v-else>
       <div class="head">
         <div class="head_top text-white p-5 text-center bg-neutral-700">
-          <div class="head_top_name border-2 border-white p-5 mb-3 font-weight-bold" :style="'font-size: '+titleFontSize(data.fontSize)+'px'">
+          <div class="head_top_name border-2 border-white p-5 mb-3 font-weight-bold"
+               :style="'font-size: '+titleFontSize(data.fontSize)+'px'">
             {{ data.personal.name }}
           </div>
           <span :style="'font-size: '+data.fontSize+'px'">{{ data.personal.cvTitle }}</span>
@@ -117,8 +118,8 @@ export default {
     convertToFive(num) {
       return num / 20;
     },
-    titleFontSize(int){
-      return int+10;
+    titleFontSize(int) {
+      return Number(int) + 10;
     },
   },
   data() {
