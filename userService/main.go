@@ -31,7 +31,6 @@ func CORSMiddleware() gin.HandlerFunc {
     }
 }
 
-}
 
 func main() {
 	r := gin.Default()
