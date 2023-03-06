@@ -9,12 +9,14 @@ type CVDto struct {
 	Experiences    []ExperienceDto  `json:"experience"`
 	Skills         []SkillDto       `json:"skills"`
 	SocialMedias   []SocialMediaDto `json:"social_medias"`
-	Name           string           `json:"name"`
+	Title          string           `json:"title"`
 	IsPublic       bool             `json:"is_public"`
 	FontSize       int              `json:"font_size"`
 	FontFamily     string           `json:"font_family"`
 	Color          string           `json:"color"`
 	TemplateNumber int              `json:"template_number"`
+	JobTitle       string           `json:"job_title"`
+	Image          string           `json:"image"`
 }
 
 type PersonalInfoDto struct {

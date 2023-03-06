@@ -15,7 +15,7 @@ func AddCv(cvDto dto.CVDto) (*dto.CVDto, *errors.Base_error) {
 		return nil, errors.New_Invalid_request_error(error_message, nil).Error
 	}
 
-	err := validate_cv_name(cvDto.Name)
+	err := validate_cv_name(cvDto.Title)
 	if err != nil {
 		return nil, err
 	}
@@ -93,9 +93,7 @@ func UpdateCv(cvDto dto.CVDto) *errors.Base_error {
 		return err
 	}
 
-
-
-	err = validate_cv_name(cvDto.Name)
+	err = validate_cv_name(cvDto.Title)
 	if err != nil {
 		return err
 	}

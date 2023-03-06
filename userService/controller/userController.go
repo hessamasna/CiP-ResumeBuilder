@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"regexp"
+	"strconv"
 	"time"
 	"userService/dto"
 	"userService/errors"
@@ -123,14 +124,15 @@ func Signin(c *gin.Context) {
 		return
 	}
 
-	c.SetCookie("access_token", accessTokenString, 60, "/", "localhost", false, true)
-	c.SetCookie("refresh_token", refreshTokenString, 12*60, "/", "localhost", false, true)
-	c.SetCookie("logged_in", "true", 60, "/", "localhost", false, false)
+	c.SetCookie("access_token", accessTokenString, 60*60*1000, "/", "localhost", false, true)
+	c.SetCookie("refresh_token", refreshTokenString, 12*60*60*1000, "/", "localhost", false, true)
+	c.SetCookie("logged_in", "true", 60*60*1000, "/", "localhost", false, false)
+	id := strconv.Itoa(result.ID)
 
 	c.JSON(200, gin.H{
 		"result": dto.Create_http_response(
 			200,
-			map[string]string{"access_token": accessTokenString, "refresh_token": refreshTokenString},
+			map[string]string{"access_token": accessTokenString, "refresh_token": refreshTokenString, "id": id},
 			nil),
 	})
 }
