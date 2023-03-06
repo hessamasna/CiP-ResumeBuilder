@@ -16,10 +16,8 @@
                     </v-col>
                 </v-row>
                 <v-row>
-                    قالب رزومه خود را انتخاب کنید
-                    <v-col cols="4" v-for="(item,index) in resumeTemplates" :key="index">
-                        <div>{{ item.id }}</div>
-                        <v-img width="20" hight="20" :src="require('~/assets/img/templates/tem2.jpg')" />
+                    <v-col cols='12' sm="4">
+                        <v-select :items="resumeTemplates" item-title="description" item-value="id" label="قالب مدنظر شما"/>
                     </v-col>
                 </v-row>
 
@@ -177,6 +175,7 @@ export default {
             },
             resume :{
                 resumeTitle: '',
+                resumeTemplate: '',
                 jobTitle: '',
                 firstName: '',
                 lastName: '',
@@ -216,17 +215,14 @@ export default {
             resumeTemplates: [
                     {
                         id:1,
-                        imgSrc: '',
                         description: 'قالب اول'
                     },
                     {
                         id:2,
-                        imgSrc: '',
                         description: 'قالب دوم'
                     },
                     {
                         id:3,
-                        imgSrc: '',
                         description: 'قالب سوم'
                     }
                 ]
