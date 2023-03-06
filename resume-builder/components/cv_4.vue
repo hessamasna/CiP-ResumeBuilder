@@ -1,7 +1,7 @@
 <template>
     <div style="max-width:90% ; margin: auto;">
         <div class="flex flex-row pa-12">
-            <div class="greenSide basis-1/4 text-white py-10 pr-5">
+            <div class="greenSide basis-1/3 text-white py-10 pr-5">
                 <div class="relative overflow-hidden px-6 mt-12">
                     <img :src="image" class="max-w-full h-auto mx-auto rounded-full bg-gray-50 grayscale mb-4 pa-2"
                         alt="title image">
@@ -240,4 +240,3 @@ export default {
   }
 }
 </style>
-  

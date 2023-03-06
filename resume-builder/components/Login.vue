@@ -101,10 +101,10 @@ export default {
         return;
       }
 
-      let api = 'https://challenge.webjar.ir/auth/login'
+      let api = 'http://localhost:3000/auth/logout'
       let body = {
-        userName: this.username,
-        password: this.password
+        Email: this.username,
+        Password: this.password
       }
 
       let res = await $fetch(api, {
