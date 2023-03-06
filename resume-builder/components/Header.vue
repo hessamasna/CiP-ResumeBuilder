@@ -40,7 +40,9 @@
             <div v-else class="text-green-500 font-semibold flex">
               <div
                   class="text-green-500 px-4 py-1  hover:underline hover:cursor-pointer ">
-                رزومه های من
+                <NuxtLink to="/dashboard">
+                  رزومه های من
+                </NuxtLink>
               </div>
               <div
                   @click="logout()"
@@ -137,6 +139,7 @@ export default {
         show: true,
         message: "با موفقیت خارج شدید"
       }
+      this.$router.push('/')
     },
     toggleLoginPopUp() {
       this.isPopUpShow = !this.isPopUpShow;

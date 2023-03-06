@@ -7,8 +7,10 @@ const store = createStore({
                 isLoggedIn: false,
                 access_token: '',
                 refresh_token: '',
-                Email: ''
+                Email: '',
+                id: 2,
             },
+            cookie: '',
             loginData: {},
         };
     },
@@ -19,6 +21,9 @@ const store = createStore({
         },
         setLoginData(state, data) {
             state.loginData = data;
+        },
+        setCookie(state, data) {
+            state.cookie = data;
         }
     },
 });

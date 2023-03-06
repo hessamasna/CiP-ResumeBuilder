@@ -84,6 +84,8 @@
 </template>
 
 <script>
+import {tr} from "vuetify/locale";
+
 export default {
   name: "Login",
   props: ['isShow'],
@@ -116,13 +118,20 @@ export default {
         this.showPasswordError = false;
         this.showUsernameError = false;
 
-        this.$store.commit('setStatus',{
+        this.$store.commit('setStatus', {
           isLoggedIn: true,
           access_token: res.result.Data.access_token,
           refresh_token: res.result.Data.refresh_token,
           Email: this.username,
+          id: res.result.Data.id
         })
-        this.$store.commit('setLoginData',res.result.data)
+
+        // let cookie = 'access_token=' + res.result.Data.access_token + '; logged_in=' + true + '; refresh_token=' + res.result.Data.refresh_token
+        // document.cookie = cookie;
+        document.cookie =  "access_token="+res.result.Data.access_token
+        document.cookie = "logged_in="+true
+        document.cookie = "refresh_token="+res.result.Data.refresh_token
+        this.$store.commit('setLoginData', res.result.data)
 
         this.loginError = '';
         this.$emit('successLogin')
