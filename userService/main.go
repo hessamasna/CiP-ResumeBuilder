@@ -23,11 +23,6 @@ func CORSMiddleware() gin.HandlerFunc {
 	  c.Header("Access-Control-Allow-Origin", "*")
 	  c.Set("content-type", "application/json")
   
-	  if c.Request.Method == "OPTIONS" {
-		c.AbortWithStatus(http.StatusOK)
-		return
-	  }
-  
 	  c.Next()
 	}
   }
