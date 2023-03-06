@@ -18,18 +18,20 @@ func init() {
 
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, Origin, Accept")
-
-		if c.Request.Method == "OPTIONS" {
-			c.AbortWithStatus(http.StatusNoContent)
-			return
-		}
-
-		c.Next()
+	  c.Header("Access-Control-Allow-Headers", "Authorization, Content-Type, refresh_token , access_token")
+	  c.Header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+	  c.Header("Access-Control-Allow-Origin", "*")
+	  c.Set("content-type", "application/json")
+  
+	  if c.Request.Method == "OPTIONS" {
+		c.AbortWithStatus(http.StatusOK)
+		return
+	  }
+  
+	  c.Next()
 	}
-}
+  }
+  
 
 func main() {
 	r := gin.Default()

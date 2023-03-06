@@ -23,14 +23,31 @@ func CreateCv(c *gin.Context) {
 	var cvDto dto.CVDto
 	cvDto = *validate_cv(c, cvDto)
 	//validate authorization
-	err = util.CheckCurrentUserHasAccess(c , int(cvDto.UserID))
+
+	token , err := util.ReadTokenFromHeader(c , "access_token")
 	if err != nil {
 		c.JSON(err.Error_code, gin.H{
 			"result": dto.Create_http_response(err.Error_code, nil, err),
 		})
 		return
 	}
-	// adding cv 
+	sub , err := util.ExtractSubFromToken(token)
+	if err != nil {
+		c.JSON(err.Error_code, gin.H{
+			"result": dto.Create_http_response(err.Error_code, nil, err),
+		})
+		return
+	}
+	// adding cv
+	cvDto.UserID = uint(sub)
+
+	err = util.CheckCurrentUserHasAccess(c, int(cvDto.UserID))
+	if err != nil {
+		c.JSON(err.Error_code, gin.H{
+			"result": dto.Create_http_response(err.Error_code, nil, err),
+		})
+		return
+	}
 	_, error := service.AddCv(cvDto)
 
 	if error != nil {
@@ -47,14 +64,13 @@ func CreateCv(c *gin.Context) {
 
 func GetCvsByUserId(c *gin.Context) {
 	// user_id := c.Param("user_id")
-	
-	
+
 	err1 := util.Check_if_is_login(c, "access_token")
 	if err1 != nil {
 		c.JSON(err1.Error_code, gin.H{
 			"result": dto.Create_http_response(err1.Error_code, nil, err1),
 		})
-		return 
+		return
 	}
 	idString := c.Param("user_id")
 	user_id, err := strconv.Atoi(idString)
@@ -68,7 +84,7 @@ func GetCvsByUserId(c *gin.Context) {
 		return
 	}
 
-	err2 := util.CheckCurrentUserHasAccess(c , user_id)
+	err2 := util.CheckCurrentUserHasAccess(c, user_id)
 	if err2 != nil {
 		c.JSON(err2.Error_code, gin.H{
 			"result": dto.Create_http_response(err2.Error_code, nil, err2),
@@ -95,7 +111,7 @@ func GetCvById(c *gin.Context) {
 	id, err := strconv.Atoi(idString)
 
 	if err != nil {
-		base_error := errors.New_Invalid_request_error("user id must be an integer.", err).Error
+		base_error := errors.New_Invalid_request_error("id must be an integer.", err).Error
 		c.JSON(http.StatusBadRequest, gin.H{
 			"result": dto.Create_http_response(http.StatusBadRequest, nil, base_error),
 		})
@@ -112,6 +128,24 @@ func GetCvById(c *gin.Context) {
 		return
 	}
 
+	if !result.IsPublic {
+		err := util.Check_if_is_login(c, "access_token")
+		if err != nil {
+			c.JSON(err.Error_code, gin.H{
+				"result": dto.Create_http_response(err.Error_code, nil, err),
+			})
+			return
+		}
+		err = util.CheckCurrentUserHasAccess(c, int(result.UserID))
+		if err != nil {
+			c.JSON(err.Error_code, gin.H{
+				"result": dto.Create_http_response(err.Error_code, nil, err),
+			})
+			return
+		}
+
+	}
+
 	c.JSON(http.StatusOK, gin.H{"result": result})
 
 }
@@ -122,11 +156,17 @@ func UpdateCv(c *gin.Context) {
 		c.JSON(err1.Error_code, gin.H{
 			"result": dto.Create_http_response(err1.Error_code, nil, err1),
 		})
-		return 
+		return
 	}
 	var cvDto dto.CVDto
 	cvDto = *validate_cv(c, cvDto)
-
+	err2 := util.CheckCurrentUserHasAccess(c, int(cvDto.UserID))
+	if err2 != nil {
+		c.JSON(err2.Error_code, gin.H{
+			"result": dto.Create_http_response(err2.Error_code, nil, err2),
+		})
+		return
+	}
 	error := service.UpdateCv(cvDto)
 	if error != nil {
 		c.JSON(error.Error_code, gin.H{
@@ -146,13 +186,13 @@ func DeleteCv(c *gin.Context) {
 		c.JSON(err1.Error_code, gin.H{
 			"result": dto.Create_http_response(err1.Error_code, nil, err1),
 		})
-		return 
+		return
 	}
 	idString := c.Param("id")
 	id, err := strconv.Atoi(idString)
 
 	if err != nil {
-		base_error := errors.New_Invalid_request_error("user id must be an integer.", err).Error
+		base_error := errors.New_Invalid_request_error("id must be an integer.", err).Error
 		c.JSON(http.StatusBadRequest, gin.H{
 			"result": dto.Create_http_response(http.StatusBadRequest, nil, base_error),
 		})
@@ -160,7 +200,24 @@ func DeleteCv(c *gin.Context) {
 		return
 	}
 
-	error := service.DeleteCv(id)
+	cvDto, error := service.Get_cv_by_id(id)
+	if error != nil {
+		c.JSON(error.Error_code, gin.H{
+			"result": dto.Create_http_response(error.Error_code, nil, error),
+		})
+
+		return
+	}
+
+	err2 := util.CheckCurrentUserHasAccess(c, int(cvDto.UserID))
+	if err2 != nil {
+		c.JSON(err2.Error_code, gin.H{
+			"result": dto.Create_http_response(err2.Error_code, nil, err2),
+		})
+		return
+	}
+
+	error = service.DeleteCv(id)
 	if error != nil {
 		c.JSON(error.Error_code, gin.H{
 			"result": dto.Create_http_response(error.Error_code, nil, error),

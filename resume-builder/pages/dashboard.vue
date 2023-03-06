@@ -9,29 +9,23 @@
       >
         <div class="" style="height: 150px">
           <v-img
-              :src="`/img/Cv_${resume.cv_temp}_preview.png`"
+              :src="`/img/Cv_${resume.template_number}_preview.png`"
               fit
           ></v-img>
-<!--<span class="absolute inset-16">  تملیت یک</span>-->
+          <!--<span class="absolute inset-16">  تملیت یک</span>-->
         </div>
 
         <v-card-title>
-          {{ resume.cv_name }}
+          {{ resume.name }}
         </v-card-title>
 
         <v-card-subtitle>
-          {{ resume.personal.name }} - {{ resume.personal.cvTitle }}
+          {{ resume.personal_info.first_name }} {{ resume.personal_info.last_name }} -
+          <!--          {{ resume.personal.cvTitle }}-->
         </v-card-subtitle>
 
         <v-card-actions>
-<!--          <v-btn-->
-<!--              color="green"-->
-<!--              variant="text"-->
-<!--              :to="`Cv-${resumes.cv_temp}-${resumes.id}`"-->
-<!--          >-->
-<!--            نمایش-->
-<!--          </v-btn>-->
-          <NuxtLink :to="`Cv-${resume.cv_temp}-${resume.id}`" class="">
+          <NuxtLink :to="`Cv-${resume.template_number}-${resume.id}`" class="">
             <v-btn
                 color="green"
                 variant="text"
@@ -40,7 +34,7 @@
             </v-btn>
           </NuxtLink>
           <v-spacer></v-spacer>
-          <NuxtLink :to="`edit/Cv-${resume.cv_temp}-${resume.id}`" class="">
+          <NuxtLink :to="`edit/Cv-${resume.template_number}-${resume.id}`" class="">
             <v-btn
                 class="px-0 mx-0"
                 color="orange-lighten-2"
@@ -85,11 +79,25 @@
 <script>
 export default {
   name: "dashboard",
-  created() {
-    console.log('isLoggedIn: ' + "this.$store.state.status");
+  async created() {
     console.log('isLoggedIn: ' + this.$store.state.status.isLoggedIn);
     if (!this.$store.state.status.isLoggedIn) {
-      // this.$router.push('/')
+      this.$router.push('/');
+    } else {
+      let api = 'http://localhost:3000/cv/getAll/' + this.$store.state.status.id;
+      console.log(this.$store.state.cookie)
+      let res = await $fetch(api, {
+        method: 'GET',
+        headers: {
+          'access_token': this.$store.state.status.access_token,
+          'refresh_token': this.$store.state.status.refresh_token
+        },
+      }).then(res => {
+        console.log(res)
+        this.resumes = res.result;
+      }).catch(error => {
+        console.log(error)
+      })
     }
   },
   methods: {
@@ -109,7 +117,7 @@ export default {
         console.log(error)
       })
     },
-    previewCv(id){
+    previewCv(id) {
 
     }
   },
@@ -120,162 +128,132 @@ export default {
         show: false,
         message: "با موفقیت پاک شد"
       },
-      resumes: [
-        {
-          id:2,
-          image: "https://tailone.tailwindtemplate.net/src/img/dummy/avatar1.png",
-          font: 'vazir-FD',
-          color: "#ffa500",
-          fontSize: 15,
-          cv_temp: 1,
-          cv_name: "رزومه اول",
-          personal: {
-            name: "سیپ سی ویq",
-            cvTitle: "توسعه دهنده",
-            phone: "09121112233",
-            age:22,
-            email: "Cv@cipCv.com",
-            website: "www.cipCv.com",
-            address: "Tehran",
-            social: [
-              {
-                title: "linkedin",
-                path: "CipCV",
-                url: "https://linkedin.com/cipC"
+      resumes:
+          [
+            {
+              "id": 1,
+              "user_id": 2,
+              "personal_info": {
+                "id": 1,
+                "first_name": "John",
+                "last_name": "Doe",
+                "email": "john.doe@example.com",
+                "phone_number": "+1-555-555-5555",
+                "address": "123 Main St, Anytown USA"
               },
-              {
-                title: "instagram",
-                path: "CipCV",
-                url: "https://instagram.com/CipCv"
+              "about_me": "",
+              "education": [],
+              "experience": [],
+              "skills": [
+                {
+                  "id": 1,
+                  "cv_id": 1,
+                  "name": "Java",
+                  "percent": 90
+                },
+                {
+                  "id": 2,
+                  "cv_id": 1,
+                  "name": "Python",
+                  "percent": 85
+                },
+                {
+                  "id": 3,
+                  "cv_id": 1,
+                  "name": "JavaScript",
+                  "percent": 80
+                },
+                {
+                  "id": 4,
+                  "cv_id": 1,
+                  "name": "SQL",
+                  "percent": 75
+                }
+              ],
+              "social_medias": [
+                {
+                  "id": 1,
+                  "cv_id": 1,
+                  "plat_form": "",
+                  "link": "https://www.linkedin.com/in/johndoe/"
+                },
+                {
+                  "id": 2,
+                  "cv_id": 1,
+                  "plat_form": "",
+                  "link": "https://github.com/johndoe"
+                }
+              ],
+              "name": "John Doe",
+              "is_public": false,
+              "font_size": 12,
+              "font_family": "Arial",
+              "color": "#333",
+              "template_number": 1
+            },
+            {
+              "id": 2,
+              "user_id": 2,
+              "personal_info": {
+                "id": 1,
+                "first_name": "John1",
+                "last_name": "Doe2",
+                "email": "john.doe@example.com",
+                "phone_number": "+1-555-555-5555",
+                "address": "123 Main St, Anytown USA"
               },
-            ]
-          },
-          aboutMe: "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز، و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد، کتابهای زیادی در شصت و سه درصد گذشته حال و آینده، شناخت فراوان جامعه و متخصصان را می طلبد، تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی، و فرهنگ پیشرو در زبان فارسی ایجاد کرد، در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها، و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی، و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.",
-          workHistory: [
-            {
-              title: 'FrontEnd Developer',
-              startDate: '2021',
-              endDate: '2022',
-              place: "Sharif",
-              description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem explicabo impedit magni reiciendis suscipit! Adipisci deleniti earum eveniet incidunt ipsa libero modi, molestiae nobis pariatur quod repellat, repudiandae rerum sit!"
-            },
-            {
-              title: 'توسعه دهنده فرانت',
-              startDate: '1399',
-              endDate: '1400',
-              place: "دانشگاه صنعتی شریف",
-              description: " زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی، و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد."
+              "about_me": "",
+              "education": [],
+              "experience": [],
+              "skills": [
+                {
+                  "id": 5,
+                  "cv_id": 2,
+                  "name": "Java",
+                  "percent": 90
+                },
+                {
+                  "id": 6,
+                  "cv_id": 2,
+                  "name": "Python",
+                  "percent": 85
+                },
+                {
+                  "id": 7,
+                  "cv_id": 2,
+                  "name": "JavaScript",
+                  "percent": 80
+                },
+                {
+                  "id": 8,
+                  "cv_id": 2,
+                  "name": "SQL",
+                  "percent": 75
+                }
+              ],
+              "social_medias": [
+                {
+                  "id": 3,
+                  "cv_id": 2,
+                  "plat_form": "",
+                  "link": "https://www.linkedin.com/in/johndoe/"
+                },
+                {
+                  "id": 4,
+                  "cv_id": 2,
+                  "plat_form": "",
+                  "link": "https://github.com/johndoe"
+                }
+              ],
+              "name": "John Doe",
+              "is_public": false,
+              "font_size": 12,
+              "font_family": "Arial",
+              "color": "#333",
+              "template_number": 1
             }
-          ],
-          skills: [
-            {
-              title: "Java",
-              amount: 80,
-            },
-            {
-              title: 'JS',
-              amount: 85,
-            },
-            {
-              title: 'Ruby',
-              amount: 20,
-            }
-          ],
-          educations: [
-            {
-              title: "مهندسی کامپیوتر",
-              place: "صنعتی شریف",
-              degree: "کارشناسی",
-              startDate: "1398",
-              endDate: "1402",
-            },
-            {
-              title: "مهندسی کامپیوتر",
-              place: "صنعتی شریف",
-              degree: "کارشناسی ارشد",
-              startDate: "1402",
-              endDate: "1406",
-            },
+
           ]
-        },
-        {
-          id:1,
-          image: "https://tailone.tailwindtemplate.net/src/img/dummy/avatar1.png",
-          font: 'vazir-FD',
-          color: "#ffa500",
-          fontSize: 15,
-          cv_temp: 2,
-          cv_name: "رزومه دوم",
-          personal: {
-            name: "سیپ سی ویq",
-            cvTitle: "توسعه دهنده",
-            phone: "09121112233",
-            age:22,
-            email: "Cv@cipCv.com",
-            website: "www.cipCv.com",
-            address: "Tehran",
-            social: [
-              {
-                title: "linkedin",
-                path: "CipCV",
-                url: "https://linkedin.com/cipC"
-              },
-              {
-                title: "instagram",
-                path: "CipCV",
-                url: "https://instagram.com/CipCv"
-              },
-            ]
-          },
-          aboutMe: "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز، و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد، کتابهای زیادی در شصت و سه درصد گذشته حال و آینده، شناخت فراوان جامعه و متخصصان را می طلبد، تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی، و فرهنگ پیشرو در زبان فارسی ایجاد کرد، در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها، و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی، و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.",
-          workHistory: [
-            {
-              title: 'FrontEnd Developer',
-              startDate: '2021',
-              endDate: '2022',
-              place: "Sharif",
-              description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem explicabo impedit magni reiciendis suscipit! Adipisci deleniti earum eveniet incidunt ipsa libero modi, molestiae nobis pariatur quod repellat, repudiandae rerum sit!"
-            },
-            {
-              title: 'توسعه دهنده فرانت',
-              startDate: '1399',
-              endDate: '1400',
-              place: "دانشگاه صنعتی شریف",
-              description: " زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی، و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد."
-            }
-          ],
-          skills: [
-            {
-              title: "Java",
-              amount: 80,
-            },
-            {
-              title: 'JS',
-              amount: 85,
-            },
-            {
-              title: 'Ruby',
-              amount: 20,
-            }
-          ],
-          educations: [
-            {
-              title: "مهندسی کامپیوتر",
-              place: "صنعتی شریف",
-              degree: "کارشناسی",
-              startDate: "1398",
-              endDate: "1402",
-            },
-            {
-              title: "مهندسی کامپیوتر",
-              place: "صنعتی شریف",
-              degree: "کارشناسی ارشد",
-              startDate: "1402",
-              endDate: "1406",
-            },
-          ]
-        }
-      ]
     }
   },
 }
