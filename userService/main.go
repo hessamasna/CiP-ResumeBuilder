@@ -1,6 +1,7 @@
 package main
 
 import (
+	"net/http"
 	"userService/controller"
 	"userService/grpc_init"
 	"userService/initializers"
@@ -21,6 +22,11 @@ func CORSMiddleware() gin.HandlerFunc {
 	  c.Header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 	  c.Header("Access-Control-Allow-Origin", "*")
 	  c.Set("content-type", "application/json")
+  
+	  if c.Request.Method == "OPTIONS" {
+		c.AbortWithStatus(http.StatusOK)
+		return
+	  }
   
 	  c.Next()
 	}
