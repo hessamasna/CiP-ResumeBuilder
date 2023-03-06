@@ -8,6 +8,6 @@ export default defineNuxtConfig({
     modules: ['@nuxtjs/tailwindcss'],
     css: ['~/assets/css/main.css', 'vuetify/lib/styles/main.sass', '@mdi/font/css/materialdesignicons.min.css'],
     build: {
-        transpile: ['vuetify'],
+        transpile: ['vuetify','@headlessui/vue'],
     },
 })
