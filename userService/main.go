@@ -1,7 +1,6 @@
 package main
 
 import (
-	"net/http"
 	"userService/controller"
 	"userService/grpc_init"
 	"userService/initializers"
