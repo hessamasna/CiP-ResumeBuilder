@@ -24,7 +24,7 @@ func CreateCv(c *gin.Context) {
 	cvDto = *validate_cv(c, cvDto)
 	//validate authorization
 
-	token , err := util.ReadTokenFromCookie(c , "access_token")
+	token , err := util.ReadTokenFromHeader(c , "access_token")
 	if err != nil {
 		c.JSON(err.Error_code, gin.H{
 			"result": dto.Create_http_response(err.Error_code, nil, err),

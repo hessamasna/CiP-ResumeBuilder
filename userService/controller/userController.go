@@ -127,6 +127,9 @@ func Signin(c *gin.Context) {
 	c.SetCookie("access_token", accessTokenString, 60*60*1000, "/", "localhost", false, true)
 	c.SetCookie("refresh_token", refreshTokenString, 12*60*60*1000, "/", "localhost", false, true)
 	c.SetCookie("logged_in", "true", 60*60*1000, "/", "localhost", false, false)
+	c.Writer.Header().Set("access_token", accessTokenString)
+	c.Writer.Header().Set("refresh_token", refreshTokenString)
+
 	id := strconv.Itoa(result.ID)
 
 	c.JSON(200, gin.H{
@@ -139,8 +142,19 @@ func Signin(c *gin.Context) {
 
 func RefreshAccessToken(c *gin.Context) {
 	// message := "could not refresh access token"
-	cookie, err := c.Cookie("refresh_token")
-	if len(cookie) == 0 {
+	token := c.GetHeader("refresh_token")
+	if token == "" {
+		// handle error
+		c.JSON(http.StatusBadRequest, gin.H{
+			"result": dto.Create_http_response(
+				400,
+				nil,
+				errors.New_Invalid_request_error("Failed to read  refresh token", nil).Error),
+		})
+
+		return
+	}
+	if len(token) == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"result": dto.Create_http_response(
 				400,
@@ -151,18 +165,14 @@ func RefreshAccessToken(c *gin.Context) {
 		return
 	}
 
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"status": "fail", "message": err.Error()})
-		return
-	}
 
-	isValid, err_message := util.ValidateToken(cookie)
+	isValid, err_message := util.ValidateToken(token)
 	if !isValid {
 		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"status": "fail", "message": err_message})
 		return
 	}
 
-	claims, err := util.ExtractToken(cookie)
+	claims, err := util.ExtractToken(token)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"status": "fail", "message": err_message})
 		return
@@ -191,6 +201,10 @@ func RefreshAccessToken(c *gin.Context) {
 
 	c.SetCookie("access_token", access_token, 60, "/", "localhost", false, true)
 	c.SetCookie("logged_in", "true", 12*60, "/", "localhost", false, false)
+	c.Writer.Header().Set("access_token", access_token)
+	// c.Writer.Header().Set("refresh_token", refreshTokenString)
+
+	c.Writer.Header().Set("access_token", access_token)
 
 	c.JSON(200, gin.H{
 		"result": dto.Create_http_response(
@@ -221,7 +235,7 @@ func GetCurrentUser(c *gin.Context) {
 		})
 		return
 	}
-	token, err := util.ReadTokenFromCookie(c, "access_token")
+	token, err := util.ReadTokenFromHeader(c, "access_token")
 	if err != nil {
 		c.JSON(err.Error_code, gin.H{
 			"result": dto.Create_http_response(err.Error_code, nil, err),

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"net/http"
 	"userService/controller"
 	"userService/grpc_init"
 	"userService/initializers"
@@ -17,20 +16,19 @@ func init() {
 }
 
 func CORSMiddleware() gin.HandlerFunc {
-    return func(c *gin.Context) {
-        c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-        c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-        c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, Origin, Accept, X-Requested-With, Access-Control-Allow-Headers, Access-Control-Request-Method, Access-Control-Request-Headers, refresh_token , access_token")
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 
-        if c.Request.Method == "OPTIONS" {
-            c.AbortWithStatus(http.StatusNoContent)
-            return
-        }
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
 
-        c.Next()
-    }
+		c.Next()
+	}
 }
-
 
 func main() {
 	r := gin.Default()
