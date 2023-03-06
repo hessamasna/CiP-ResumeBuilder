@@ -23,13 +23,7 @@ func CreateCv(c *gin.Context) {
 	var cvDto dto.CVDto
 	cvDto = *validate_cv(c, cvDto)
 	//validate authorization
-	err = util.CheckCurrentUserHasAccess(c, int(cvDto.UserID))
-	if err != nil {
-		c.JSON(err.Error_code, gin.H{
-			"result": dto.Create_http_response(err.Error_code, nil, err),
-		})
-		return
-	}
+
 	token , err := util.ReadTokenFromCookie(c , "access_token")
 	if err != nil {
 		c.JSON(err.Error_code, gin.H{
@@ -46,6 +40,14 @@ func CreateCv(c *gin.Context) {
 	}
 	// adding cv
 	cvDto.UserID = uint(sub)
+
+	err = util.CheckCurrentUserHasAccess(c, int(cvDto.UserID))
+	if err != nil {
+		c.JSON(err.Error_code, gin.H{
+			"result": dto.Create_http_response(err.Error_code, nil, err),
+		})
+		return
+	}
 	_, error := service.AddCv(cvDto)
 
 	if error != nil {

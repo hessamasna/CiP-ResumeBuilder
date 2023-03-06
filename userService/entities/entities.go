@@ -17,12 +17,14 @@ type CV struct {
 	UserID         uint         `json:"user_id" gorm:"not null"`
 	PersonalInfo   PersonalInfo `json:"personal_info" gorm:"embedded;embeddedPrefix:personal_info_"`
 	AboutMe        string       `json:"about_me"`
-	Name           string       `json:"name" gorm:"not null"`
+	Title          string       `json:"title" gorm:"not null"`
 	IsPublic       bool         `json:"is_public" gorm:"not null;default:false"`
 	FontSize       int          `json:"font_size" gorm:"not null"`
 	FontFamily     string       `json:"font_family" gorm:"not null"`
 	Color          string       `json:"color" gorm:"not null"`
 	TemplateNumber int          `json:"template_number" gorm:"not null"`
+	JobTitle       string       `json:"job_title"`
+	Image          string       `json:"image"`
 
 	// Education     []Education   `json:"education" `
 	// Experience    []Experience  `json:"experience" `
