@@ -30,7 +30,22 @@ func CreateCv(c *gin.Context) {
 		})
 		return
 	}
+	token , err := util.ReadTokenFromCookie(c , "access_token")
+	if err != nil {
+		c.JSON(err.Error_code, gin.H{
+			"result": dto.Create_http_response(err.Error_code, nil, err),
+		})
+		return
+	}
+	sub , err := util.ExtractSubFromToken(token)
+	if err != nil {
+		c.JSON(err.Error_code, gin.H{
+			"result": dto.Create_http_response(err.Error_code, nil, err),
+		})
+		return
+	}
 	// adding cv
+	cvDto.UserID = uint(sub)
 	_, error := service.AddCv(cvDto)
 
 	if error != nil {
