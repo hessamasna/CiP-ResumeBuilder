@@ -115,12 +115,14 @@ export default {
         //todo save in vueX
         this.showPasswordError = false;
         this.showUsernameError = false;
-        // localStorage.setItem("token",JSON.stringify(res.result.Data));
 
-        // token.isLoggedIn = true;
-        // token.access_token = res.result.Data.access_token;
-        // token.refresh_token = res.result.Data.refresh_token;
-        // token.Email = this.username;
+        this.$store.commit('setStatus',{
+          isLoggedIn: true,
+          access_token: res.result.Data.access_token,
+          refresh_token: res.result.Data.refresh_token,
+          Email: this.username,
+        })
+        this.$store.commit('setLoginData',res.result.data)
 
         this.loginError = '';
         this.$emit('successLogin')

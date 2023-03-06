@@ -85,6 +85,13 @@
 <script>
 export default {
   name: "dashboard",
+  created() {
+    console.log('isLoggedIn: ' + "this.$store.state.status");
+    console.log('isLoggedIn: ' + this.$store.state.status.isLoggedIn);
+    if (!this.$store.state.status.isLoggedIn) {
+      // this.$router.push('/')
+    }
+  },
   methods: {
     async deleteCv(id) {
       let api = 'https://localhost:3000/cvDelete/' + id;

@@ -108,6 +108,8 @@ export default {
   created() {
     // this.info = token;
     // this.isLogin = this.info.isLoggedIn;
+    console.log('isLoggedIn: ' + this.$store.state.status.isLoggedIn);
+    this.isLogin = this.$store.state.status.isLoggedIn;
   },
   methods: {
     async logout() {
@@ -117,18 +119,19 @@ export default {
         method: 'POST',
       }).then(res => {
         //todo save in vueX
-        // localStorage.setItem('token', 'logout');
       }).catch(error => {
         console.log(error)
       })
       this.isLogin = false;
-      // token = {
-      //   isLoggedIn: false,
-      //   access_token: '',
-      //   refresh_token: '',
-      //   Email: '',
-      //   name: ''
-      // },
+
+      this.$store.commit('setStatus', {
+        isLoggedIn: false,
+        access_token: '',
+        refresh_token: '',
+        Email: '',
+      })
+      this.$store.commit('setLoginData', {})
+
       this.snackbar = {
         color: 'green',
         show: true,
