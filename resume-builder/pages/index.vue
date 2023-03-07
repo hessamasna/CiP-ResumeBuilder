@@ -15,12 +15,8 @@
         <img src="/img/cv_main.png" alt="main-banner" class=" max-h-[90vh]">
       </div>
     </div>
-    <Cv_1/>
-
-    <Cv_4/>
-
-    <CV2/>
-
+<!--    <Cv_1/>-->
+<!--    <CV2/>-->
   </div>
 </template>
 

@@ -37,6 +37,21 @@
 
               </div>
             </Menu>
+
+            <div v-else class="text-green-500 font-semibold flex">
+              <div
+                  class="text-green-500 px-4 py-1  hover:underline hover:cursor-pointer ">
+                <NuxtLink to="/dashboard">
+                  رزومه های من
+                </NuxtLink>
+              </div>
+              <div
+                  @click="logout()"
+                  class="text-green-500 border-green-500 border px-8 py-1 rounded-xl hover:bg-green-500 hover:text-white hover:cursor-pointer ">
+                خروج
+              </div>
+            </div>
+
             <div v-else class="text-green-500 font-semibold"> وارد شدید ! :)</div>
 
           </div>
@@ -67,6 +82,27 @@
       </div>
     </DisclosurePanel>
   </Disclosure>
+  <v-snackbar
+      v-model="snackbar.show"
+      :timeout="5000"
+      :color="snackbar.color"
+
+
+  >
+    <div class="text-center rtl">
+
+      {{ snackbar.message }}
+    </div>
+
+    <template v-slot:actions>
+      <v-btn
+          variant="flat"
+          @click="snackbar.show = false"
+      >
+        متوجه شدم
+      </v-btn>
+    </template>
+  </v-snackbar>
   <login @successLogin="successLogin()" @togglePopUp="toggleLoginPopUp()" :is-show="isPopUpShow"/>
   <signup @successSignup="successSignup()" @signupPopup="toggleSignupPopUp()" :is-show="isSignupPopupShow"/>
 </template>
@@ -90,7 +126,40 @@ export default {
     MenuItems,
     login
   },
+  created() {
+    // this.info = token;
+    // this.isLogin = this.info.isLoggedIn;
+    console.log('isLoggedIn: ' + this.$store.state.status.isLoggedIn);
+    this.isLogin = this.$store.state.status.isLoggedIn;
+  },
   methods: {
+    async logout() {
+      let api = 'http://localhost:3000/auth/logout'
+
+      let res = await $fetch(api, {
+        method: 'POST',
+      }).then(res => {
+        //todo save in vueX
+      }).catch(error => {
+        console.log(error)
+      })
+      this.isLogin = false;
+
+      this.$store.commit('setStatus', {
+        isLoggedIn: false,
+        access_token: '',
+        refresh_token: '',
+        Email: '',
+      })
+      this.$store.commit('setLoginData', {})
+
+      this.snackbar = {
+        color: 'green',
+        show: true,
+        message: "با موفقیت خارج شدید"
+      }
+      this.$router.push('/')
+    },
     toggleLoginPopUp() {
       this.isPopUpShow = !this.isPopUpShow;
     },
@@ -99,6 +168,11 @@ export default {
     },
     successLogin() {
       this.isPopUpShow = !this.isPopUpShow;
+      this.snackbar = {
+        color: 'green',
+        show: true,
+        message: "با موفقیت وارد شدید"
+      }
       this.isLogin = true;
     },
     successSignup() {
@@ -116,12 +190,27 @@ export default {
       isPopUpShow: false,
       isSignupPopupShow: false,
       isLogin: false,
+
+      snackbar: {
+        color: null,
+        show: false,
+        message: "با موفقیت پاک شد"
+      },
+      info: {
+        isLoggedIn: false,
+        access_token: '',
+        refresh_token: '',
+        Email: '',
+        name: ''
+      },
+
       isSignup: false,
+
       navigation: [
         // {name: 'خانه', href: '/', current: false},
-          // {name: 'محصولات', href: '#', current: false},
-          // {name: 'خدمات', href: '#', current: false},
-          // {name: 'وبلاگ', href: '/blogs', current: false},
+        // {name: 'محصولات', href: '#', current: false},
+        // {name: 'خدمات', href: '#', current: false},
+        // {name: 'وبلاگ', href: '/blogs', current: false},
       ]
     }
   },

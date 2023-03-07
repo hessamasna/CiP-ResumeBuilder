@@ -13,6 +13,7 @@ const (
 	INVALID_REQUEST
 	ENTITY_DOES_NOT_EXIST
 	TOKEN_EXPIRED
+	AUTHORIZATION_ERROR
 )
 
 func (e Error_type) String() string {
@@ -29,6 +30,8 @@ func (e Error_type) String() string {
 		return "INVALID_REQUEST"
 	case ENTITY_DOES_NOT_EXIST:
 		return "ENTITY_DOES_NOT_EXIST"
+	case AUTHORIZATION_ERROR:
+		return "AUTHORIZATION_ERROR"
 	default:
 		return fmt.Sprintf("%d , UNKNOW ERROR TYPE", int(e))
 	}

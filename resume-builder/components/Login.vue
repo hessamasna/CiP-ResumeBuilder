@@ -67,9 +67,10 @@
               </div>
 
             </div>
+            <div class="text-center mt-4 text-red">{{ loginError }}</div>
           </div>
           <button
-              class=" mt-10 rounded-xl text-white align-middle bg-green-500 py-2" @click="login()">
+              class=" mt-8 rounded-xl text-white align-middle bg-green-500 py-2" @click="login()">
             ورود
           </button>
         </div>
@@ -83,6 +84,8 @@
 </template>
 
 <script>
+import {tr} from "vuetify/locale";
+
 export default {
   name: "Login",
   props: ['isShow'],
@@ -101,7 +104,7 @@ export default {
         return;
       }
 
-      let api = 'http://localhost:3000/auth/logout'
+      let api = 'http://localhost:3000/auth/login'
       let body = {
         Email: this.username,
         Password: this.password
@@ -114,11 +117,29 @@ export default {
         //todo save in vueX
         this.showPasswordError = false;
         this.showUsernameError = false;
+
+        this.$store.commit('setStatus', {
+          isLoggedIn: true,
+          access_token: res.result.Data.access_token,
+          refresh_token: res.result.Data.refresh_token,
+          Email: this.username,
+          id: res.result.Data.id
+        })
+
+        // let cookie = 'access_token=' + res.result.Data.access_token + '; logged_in=' + true + '; refresh_token=' + res.result.Data.refresh_token
+        // document.cookie = cookie;
+        document.cookie =  "access_token="+res.result.Data.access_token
+        document.cookie = "logged_in="+true
+        document.cookie = "refresh_token="+res.result.Data.refresh_token
+        this.$store.commit('setLoginData', res.result.data)
+
+        this.loginError = '';
         this.$emit('successLogin')
       }).catch(error => {
         this.showPasswordError = true;
         this.showUsernameError = true;
         console.log(error)
+        this.loginError = 'در ورود مشکلی به وجود آمده است';
       })
 
     }
@@ -129,7 +150,8 @@ export default {
       showPasswordError: false,
       showPassword: false,
       username: '',
-      password: ''
+      password: '',
+      loginError: '',
     }
   },
 }

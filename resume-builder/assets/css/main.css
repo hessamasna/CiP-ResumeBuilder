@@ -21,10 +21,32 @@
     font-weight: normal;
     font-style: normal;
 }
+@font-face {
+    font-family: "IRANSans";
+    src: url('fonts/IRANSansWeb.eot');
+    src:url('fonts/IRANSansWeb.woff2') format('woff2'),
+    url('fonts/IRANSansWeb.woff') format('woff'),
+    url('fonts/IRANSansWeb.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Yekan";
+    src: url('fonts/Yekan.eot');
+    src:url('fonts/Yekan.woff2') format('woff2'),
+    url('fonts/Yekan.woff') format('woff'),
+    url('fonts/Yekan.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
 
-*,
-*::before,
-*::after {
-    font-family: vazir-FD, sans-serif;
+/**,*/
+/**::before,*/
+/**::after {*/
+/*    font-family: vazir-FD,IRANSans, sans-serif;*/
+/*    scroll-behavior: smooth;*/
+/*}*/
+body {
+    font-family: vazir-FD,IRANSans,Yekan, sans-serif;
     scroll-behavior: smooth;
 }

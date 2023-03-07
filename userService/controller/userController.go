@@ -1,17 +1,20 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt"
-	"golang.org/x/crypto/bcrypt"
+	"fmt"
 	"net/http"
 	"os"
 	"regexp"
+	"strconv"
 	"time"
 	"userService/dto"
 	"userService/errors"
 	"userService/service"
 	"userService/util"
+
+	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func Signup(c *gin.Context) {
@@ -22,16 +25,18 @@ func Signup(c *gin.Context) {
 		return
 	}
 
-	if len(userDto.Phone_number) == 0 {
+	fmt.Print("user pass is : " + userDto.PasswordHash)
+
+	if len(userDto.PhoneNumber) == 0 {
 		error := errors.New_Invalid_request_error("Phone number cannot be empty.", nil).Error
 		result := dto.Create_http_response(error.Error_code, nil, error)
 		c.JSON(error.Error_code, gin.H{
 			"result": result,
 		})
-		return 
+		return
 	}
 	//hash the password
-	hash, err := bcrypt.GenerateFromPassword([]byte(userDto.Password_hash), 10)
+	hash, err := bcrypt.GenerateFromPassword([]byte(userDto.PasswordHash), 10)
 
 	if err != nil {
 		error := errors.New_hashing_error(err).Error
@@ -42,7 +47,7 @@ func Signup(c *gin.Context) {
 		return
 	}
 
-	userDto.Password_hash = string(hash)
+	userDto.PasswordHash = string(hash)
 
 	//add user
 	_, error := service.AddUser(userDto)
@@ -74,8 +79,7 @@ func Signin(c *gin.Context) {
 
 		return
 	}
-
-	error := bcrypt.CompareHashAndPassword([]byte(result.Password_hash), []byte(userDto.Password_hash))
+	error := bcrypt.CompareHashAndPassword([]byte(result.PasswordHash), []byte(userDto.PasswordHash))
 
 	if error != nil {
 		c.JSON(400, gin.H{
@@ -87,7 +91,7 @@ func Signin(c *gin.Context) {
 		return
 	}
 	access_token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"sub": result.User_id,
+		"sub": result.ID,
 		"exp": time.Now().Add(time.Hour).Unix(),
 	})
 	accessTokenString, error := access_token.SignedString([]byte(os.Getenv("SECRET")))
@@ -104,7 +108,7 @@ func Signin(c *gin.Context) {
 	}
 
 	refresh_token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"sub": result.User_id,
+		"sub": result.ID,
 		"exp": time.Now().Add(time.Hour * 12).Unix(),
 	})
 	refreshTokenString, error := refresh_token.SignedString([]byte(os.Getenv("SECRET")))
@@ -120,49 +124,69 @@ func Signin(c *gin.Context) {
 		return
 	}
 
-	c.SetCookie("access_token", accessTokenString, 60, "/", "localhost", false, true)
-	c.SetCookie("refresh_token", refreshTokenString, 12*60, "/", "localhost", false, true)
-	c.SetCookie("logged_in", "true", 60, "/", "localhost", false, false)
+	c.SetCookie("access_token", accessTokenString, 60*60*1000, "/", "localhost", false, true)
+	c.SetCookie("refresh_token", refreshTokenString, 12*60*60*1000, "/", "localhost", false, true)
+	c.SetCookie("logged_in", "true", 60*60*1000, "/", "localhost", false, false)
+	c.Writer.Header().Set("access_token", accessTokenString)
+	c.Writer.Header().Set("refresh_token", refreshTokenString)
+
+	id := strconv.Itoa(result.ID)
 
 	c.JSON(200, gin.H{
 		"result": dto.Create_http_response(
 			200,
-			map[string]string{"access_token": accessTokenString, "refresh_token": refreshTokenString},
+			map[string]string{"access_token": accessTokenString, "refresh_token": refreshTokenString, "id": id},
 			nil),
 	})
 }
 
 func RefreshAccessToken(c *gin.Context) {
 	// message := "could not refresh access token"
-	cookie, err := c.Cookie("refresh_token")
-	if len(cookie) == 0 {
+	token := c.GetHeader("refresh_token")
+	if token == "" {
+		// handle error
 		c.JSON(http.StatusBadRequest, gin.H{
 			"result": dto.Create_http_response(
 				400,
 				nil,
-				errors.New_Invalid_request_error("Failed to read  access token or you are not login", nil).Error),
+				errors.New_Invalid_request_error("Failed to read  refresh token", nil).Error),
+		})
+
+		return
+	}
+	if len(token) == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"result": dto.Create_http_response(
+				400,
+				nil,
+				errors.New_Invalid_request_error("Failed to read  refresh token", nil).Error),
 		})
 
 		return
 	}
 
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"status": "fail", "message": err.Error()})
-		return
-	}
 
-	isValid, err_message := util.ValidateToken(cookie)
+	isValid, err_message := util.ValidateToken(token)
 	if !isValid {
 		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"status": "fail", "message": err_message})
 		return
 	}
 
-	claims, err := util.ExtractToken(cookie)
+	claims, err := util.ExtractToken(token)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"status": "fail", "message": err_message})
 		return
 	}
-	sub := int(claims["sub"].(int))
+	// sub := claims["sub"].(string)
+	sub := int(claims["sub"].(float64))
+	// subInt, err := strconv.Atoi(sub)
+
+	// if err != nil {
+	// 	c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": "fail", "message": err_message})
+	// 	return
+	// }
+
+	// access_token, err := createAccessToken(subInt)
 	access_token, err := createAccessToken(sub)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -177,6 +201,10 @@ func RefreshAccessToken(c *gin.Context) {
 
 	c.SetCookie("access_token", access_token, 60, "/", "localhost", false, true)
 	c.SetCookie("logged_in", "true", 12*60, "/", "localhost", false, false)
+	c.Writer.Header().Set("access_token", access_token)
+	// c.Writer.Header().Set("refresh_token", refreshTokenString)
+
+	c.Writer.Header().Set("access_token", access_token)
 
 	c.JSON(200, gin.H{
 		"result": dto.Create_http_response(
@@ -197,6 +225,44 @@ func Logout(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"status": "success"})
 
+}
+
+func GetCurrentUser(c *gin.Context) {
+	err := util.Check_if_is_login(c, "access_token")
+	if err != nil {
+		c.JSON(err.Error_code, gin.H{
+			"result": dto.Create_http_response(err.Error_code, nil, err),
+		})
+		return
+	}
+	token, err := util.ReadTokenFromHeader(c, "access_token")
+	if err != nil {
+		c.JSON(err.Error_code, gin.H{
+			"result": dto.Create_http_response(err.Error_code, nil, err),
+		})
+		return
+	}
+	sub, err := util.ExtractSubFromToken(token)
+	if err != nil {
+		c.JSON(err.Error_code, gin.H{
+			"result": dto.Create_http_response(err.Error_code, nil, err),
+		})
+		return
+	}
+	result, err := service.Get_user_by_id(sub)
+	if err != nil {
+		c.JSON(err.Error_code, gin.H{
+			"result": dto.Create_http_response(err.Error_code, nil, err),
+		})
+		return
+	}
+	result.PasswordHash = "*******"
+	c.JSON(200, gin.H{
+		"result": dto.Create_http_response(
+			200,
+			result,
+			nil),
+	})
 }
 
 func validate_user(c *gin.Context, userDto dto.UserDto) *dto.UserDto {
@@ -220,7 +286,6 @@ func validate_user(c *gin.Context, userDto dto.UserDto) *dto.UserDto {
 		})
 		return nil
 	}
-	
 
 	//Check email regex
 	re := regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
@@ -235,7 +300,7 @@ func validate_user(c *gin.Context, userDto dto.UserDto) *dto.UserDto {
 	}
 
 	//check if password is empty
-	if len(userDto.Password_hash) == 0 {
+	if len(userDto.PasswordHash) == 0 {
 		error := errors.New_Invalid_request_error("Password cannot be empty", nil).Error
 		result := dto.Create_http_response(error.Error_code, nil, error)
 		c.JSON(error.Error_code, gin.H{
