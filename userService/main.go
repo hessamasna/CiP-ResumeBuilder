@@ -39,16 +39,24 @@ func main() {
 	// Add CORS middleware
 	r.Use(CORSMiddleware())
 
-	r.POST("auth/signup", controller.Signup)
-	r.POST("auth/login", controller.Signin)
-	r.POST("auth/refresh", controller.RefreshAccessToken)
+	
+	p := ginprometheus.NewPrometheus("gin")
+    p.Use(r)
+
+    // Register HTTP requests counter
+    prometheus.MustRegister(httpRequestsTotal)
+
+    // r.GET("/metrics", gin.WrapH(promhttp.Handler()))
+
+	r.POST("/auth/signup", controller.Signup)
+	r.POST("/auth/login", controller.Signin)
+	r.POST("/auth/refresh", controller.RefreshAccessToken)
 	r.POST("/auth/logout", controller.Logout)
 	r.GET("/auth/me", controller.GetCurrentUser)
 	r.POST("/cv/create", controller.CreateCv)
-	r.GET("cv/getAll/:user_id", controller.GetCvsByUserId)
-	r.GET("cv/get/:id", controller.GetCvById)
-	r.PUT("cv/update", controller.UpdateCv)
-	r.DELETE("cv/delete/:id", controller.DeleteCv)
+	r.GET("/cv/getAll/:user_id", controller.GetCvsByUserId)
+	r.GET("/cv/get/:id", controller.GetCvById)
+	r.PUT("/cv/update", controller.UpdateCv)
+	r.DELETE("/cv/delete/:id", controller.DeleteCv)
 	r.Run()
-
 }
