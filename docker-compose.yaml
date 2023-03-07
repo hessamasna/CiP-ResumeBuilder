@@ -84,4 +84,4 @@ services:
     env_file:
       - ./userService/.env
     volumes:
-      - .userService/app/migrations:/app/migrations
+      - ./userService/app/migrations:/app/migrations
