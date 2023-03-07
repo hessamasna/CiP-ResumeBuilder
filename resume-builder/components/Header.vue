@@ -31,12 +31,13 @@
             <Menu as="div" class="relative ml-3" @click="toggleLoginPopUp()" v-if="!isLogin">
               <div>
                 <div
-                    class="text-green-500 border-green-500 border px-8 py-1 rounded-xl hover:bg-green-500 hover:text-white hover:cursor-pointer ">
+                    class="text-green-500 border-green-500 border px-8 py-1 rounded-xl hover:cursor-pointer ">
                   ورود
                 </div>
 
               </div>
             </Menu>
+
             <div v-else class="text-green-500 font-semibold flex">
               <div
                   class="text-green-500 px-4 py-1  hover:underline hover:cursor-pointer ">
@@ -50,6 +51,23 @@
                 خروج
               </div>
             </div>
+
+            <div v-else class="text-green-500 font-semibold"> وارد شدید ! :)</div>
+
+          </div>
+
+          <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+            <Menu as="div" class="relative ml-3" @click="toggleSignupPopUp()" v-if="!isSignup">
+              <div>
+                <div
+                    class="text-white bg-green-500 border-green-500 border px-8 py-1 rounded-xl hover:cursor-pointer ">
+                  ثبت نام
+                </div>
+
+              </div>
+            </Menu>
+            <div v-else class="text-green-500 font-semibold"> وارد شدید ! :)</div>
+            
           </div>
         </div>
       </div>
@@ -86,6 +104,7 @@
     </template>
   </v-snackbar>
   <login @successLogin="successLogin()" @togglePopUp="toggleLoginPopUp()" :is-show="isPopUpShow"/>
+  <signup @successSignup="successSignup()" @signupPopup="toggleSignupPopUp()" :is-show="isSignupPopupShow"/>
 </template>
 
 <script>
@@ -144,6 +163,9 @@ export default {
     toggleLoginPopUp() {
       this.isPopUpShow = !this.isPopUpShow;
     },
+    toggleSignupPopUp() {
+      this.isSignupPopupShow = !this.isSignupPopupShow;
+    },
     successLogin() {
       this.isPopUpShow = !this.isPopUpShow;
       this.snackbar = {
@@ -152,6 +174,10 @@ export default {
         message: "با موفقیت وارد شدید"
       }
       this.isLogin = true;
+    },
+    successSignup() {
+      this.isSignupPopupShow = !this.isSignupPopupShow;
+      this.isSignup = true;
     },
     toggleNavigationActivation(item) {
       this.navigation.map(nav => {
@@ -162,7 +188,9 @@ export default {
   data() {
     return {
       isPopUpShow: false,
+      isSignupPopupShow: false,
       isLogin: false,
+
       snackbar: {
         color: null,
         show: false,
@@ -175,6 +203,9 @@ export default {
         Email: '',
         name: ''
       },
+
+      isSignup: false,
+
       navigation: [
         // {name: 'خانه', href: '/', current: false},
         // {name: 'محصولات', href: '#', current: false},
