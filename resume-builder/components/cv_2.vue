@@ -1,31 +1,31 @@
 <template>
   <div>
     <loading class="h-screen" v-if="loading"/>
-    <div class="pa-12 pt-2" :style="'font-family: '+ data.font+ '!important'" v-else>
+    <div class="pa-12 pt-2" :style="'font-family: '+ data.font_family+ '!important'" v-else>
       <div class="head">
         <div class="head_top text-white p-5 text-center bg-neutral-700">
           <div class="head_top_name border-2 border-white p-5 mb-3 font-weight-bold"
-               :style="'font-size: '+titleFontSize(data.fontSize)+'px'">
-            {{ data.personal.name }}
+               :style="'font-size: '+titleFontSize(data.font_size)+'px'">
+            {{ data.personal_info.first_name }} {{data.personal_info.last_name}}
           </div>
-          <span :style="'font-size: '+data.fontSize+'px'">{{ data.personal.cvTitle }}</span>
+          <span :style="'font-size: '+data.font_size+'px'">{{ data.job_title }}</span>
         </div>
         <div class="head_info 	p-5 text-center flex justify-between" :style="'background-color: '+data.color">
           <div class="w-1/4">
             <div class="font-bold	border-b-2 border-black">محل زندگی</div>
-            <div class="mt-1" :style="'font-size: '+data.fontSize+'px'">{{ data.personal.address }}</div>
+            <div class="mt-1" :style="'font-size: '+data.font_size+'px'">{{ data.personal_info.address }}</div>
           </div>
           <div class="w-1/4 mr-4">
             <div class="font-bold	border-b-2 border-black">سن</div>
-            <div class="mt-1" :style="'font-size: '+data.fontSize+'px'">{{ data.personal.age }}</div>
+            <div class="mt-1" :style="'font-size: '+data.font_size+'px'">{{ !!data.personal_info.age?data.personal_info.age:22 }}</div>
           </div>
           <div class="w-1/4 mr-4">
             <div class="font-bold	border-b-2 border-black">شماره تلفن</div>
-            <div class="mt-1" :style="'font-size: '+data.fontSize+'px'">{{ data.personal.phone }}</div>
+            <div class="mt-1" :style="'font-size: '+data.font_size+'px'">{{ data.personal_info.phone_number }}</div>
           </div>
           <div class="w-1/4 mr-4">
             <div class="font-bold	border-b-2 border-black">ایمیل</div>
-            <div class="mt-1" :style="'font-size: '+data.fontSize+'px'">{{ data.personal.email }}</div>
+            <div class="mt-1" :style="'font-size: '+data.font_size+'px'">{{ data.personal_info.email }}</div>
           </div>
         </div>
       </div>
@@ -35,20 +35,20 @@
             <div class="details_section_title  font-bold text-center" :style="'background-color: '+data.color">
               درباره من
             </div>
-            <div class="details_section_details p-4 text-justify" :style="'font-size: '+data.fontSize+'px'">
-              {{ data.aboutMe }}
+            <div class="details_section_details p-4 text-justify" :style="'font-size: '+data.font_size+'px'">
+              {{ data.about_me }}
             </div>
           </div>
           <div class="details_section">
             <div class="details_section_title font-bold text-center" :style="'background-color: '+data.color">
               سوابق شغلی
             </div>
-            <div class="details_section_details p-2" :style="'font-size: '+data.fontSize+'px'">
-              <div v-for="(item,index) in data.workHistory" :key="index" class="mb-2">
+            <div class="details_section_details p-2" :style="'font-size: '+data.font_size+'px'">
+              <div v-for="(item,index) in data.experience" :key="index" class="mb-2">
                 <div class="font-bold">{{ item.title }}</div>
-                <div>{{ item.place }}</div>
+                <div>{{ item.company }}</div>
                 <div class="text-slate-600">
-                  {{ item.startDate }} - {{ item.endDate }}
+                  {{ item.start }} - {{ item.end }}
                 </div>
                 <div>
                   {{ item.description }}
@@ -64,12 +64,10 @@
             <div class="details_section_title font-bold text-center" :style="'background-color: '+data.color">
               تکنولوژی ها
             </div>
-            <div class="details_section_details p-2" :style="'font-size: '+data.fontSize+'px'">
+            <div class="details_section_details p-2" :style="'font-size: '+data.font_size+'px'">
               <div v-for="(item,index) in data.skills" :key="index" class="flex items-center justify-between">
-                <div>{{ item.title }}</div>
-                <v-rating disabled :color="data.color" :model-value="convertToFive(item.amount)" density="compact"/>
-                <!--                <v-rating disabled v-model="convertToFive(item.amount)" density="compact"/>-->
-
+                <div>{{ item.name }}</div>
+                <v-rating disabled :color="data.color" :model-value="convertToFive(item.percent)" density="compact"/>
               </div>
             </div>
           </div>
@@ -77,17 +75,17 @@
             <div class="details_section_title font-bold text-center" :style="'background-color: '+data.color">
               سوابق تحصیلی
             </div>
-            <div class="details_section_details p-2" :style="'font-size: '+data.fontSize+'px'">
-              <div v-for="(item,index) in data.educations" :key="index" class="mb-2">
+            <div class="details_section_details p-2" :style="'font-size: '+data.font_size+'px'">
+              <div v-for="(item,index) in data.education" :key="index" class="mb-2">
                 <div class="font-bold">{{ item.degree }}</div>
-                <div class="font-semibold	">{{ item.title }}</div>
+                <div class="font-semibold	">{{ item.school }}-{{ item.major }}</div>
                 <div>{{ item.place }}</div>
                 <div class="text-slate-600">
-                  {{ item.startDate }} - {{ item.endDate }}
+                  {{ item.start }} - {{ item.end }}
                 </div>
-                <div>
-                  {{ item.description }}
-                </div>
+<!--                <div>-->
+<!--                  {{ item.description }}-->
+<!--                </div>-->
               </div>
             </div>
           </div>
@@ -96,9 +94,9 @@
               راه های ارتباطی
             </div>
             <div class="details_section_details pa-2 flex">
-              <div v-for="(media,index) in data.personal.social" :key="index" class="ml-2">
-                <NuxtLink :to="media.url" target="_blank" class="">
-                  <v-icon>mdi-{{ media.title }}</v-icon>
+              <div v-for="(media,index) in data.social_medias" :key="index" class="ml-2">
+                <NuxtLink :to="media.link" target="_blank" class="">
+                  <v-icon>mdi-{{ media.plat_form }}</v-icon>
                 </NuxtLink>
               </div>
             </div>
