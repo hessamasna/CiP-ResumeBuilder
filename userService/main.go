@@ -7,7 +7,21 @@ import (
 	"userService/initializers"
 
 	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/zsais/go-gin-prometheus"
 )
+
+var (
+	httpRequestsTotal = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "http_requests_total",
+			Help: "Total number of HTTP requests.",
+		},
+		[]string{"path", "method", "status"},
+	)
+)
+
+
 
 func init() {
 	initializers.LoadEnvVariables()
@@ -20,7 +34,7 @@ func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, Origin, Accept, refresh_token , access_token")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, Origin, Accept, refresh_token, access_token")
 
 		if c.Request.Method == "OPTIONS" {
 			c.AbortWithStatus(http.StatusNoContent)
@@ -30,8 +44,6 @@ func CORSMiddleware() gin.HandlerFunc {
 		c.Next()
 	}
 }
-
-  
 
 func main() {
 	r := gin.Default()
