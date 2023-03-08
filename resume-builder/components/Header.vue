@@ -6,12 +6,12 @@
         <div class="relative flex h-16 items-center justify-between center">
           <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
             <!-- Mobile menu button-->
-            <DisclosureButton
-                class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
-              <span class="sr-only">Open main menu</span>
-              <Bars3Icon v-if="!open" class="block h-6 w-6" aria-hidden="true"/>
-              <XMarkIcon v-else class="block h-6 w-6" aria-hidden="true"/>
-            </DisclosureButton>
+<!--            <DisclosureButton-->
+<!--                class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">-->
+<!--              <span class="sr-only">Open main menu</span>-->
+<!--              <Bars3Icon v-if="!open" class="block h-6 w-6" aria-hidden="true"/>-->
+<!--              <XMarkIcon v-else class="block h-6 w-6" aria-hidden="true"/>-->
+<!--            </DisclosureButton>-->
           </div>
           <div class="flex flex-1 items-center sm:gap-28 sm:justify-start ">
             <div class="flex flex-shrink-0 items-center">
@@ -27,7 +27,7 @@
               </div>
             </div>
           </div>
-          <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+          <div class="flex flex-row">
             <Menu as="div" class="relative ml-3" @click="toggleLoginPopUp()" v-if="!isLogin">
               <div class="flex gap-2">
 
@@ -35,6 +35,11 @@
                     class="text-green-500 border-green-500 border px-8 py-1 rounded-xl hover:cursor-pointer ">
                   ورود
                 </div>
+
+              </div>
+            </Menu>
+            <Menu as="div" class="relative ml-3" @click="toggleSignupPopUp()" v-if="!isLogin">
+              <div>
                 <div
                     class="text-white bg-green-500 border-green-500 border px-8 py-1 rounded-xl hover:cursor-pointer ">
                   ثبت نام
@@ -42,7 +47,7 @@
               </div>
             </Menu>
 
-            <div v-else class="text-green-500 font-semibold flex">
+            <div v-if="isLogin" class="text-green-500 font-semibold flex">
               <div
                   class="text-green-500 px-4 py-1  hover:underline hover:cursor-pointer ">
                 <NuxtLink to="/dashboard">
@@ -57,28 +62,42 @@
             </div>
           </div>
 
-<!--          <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">-->
-<!--            <Menu as="div" class="relative ml-3" @click="toggleSignupPopUp()" v-if="!isSignup">-->
-<!--              <div>-->
+          <!--          <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">-->
+          <!--            <Menu as="div" class="relative ml-3" @click="toggleSignupPopUp()" v-if="!isSignup">-->
+          <!--              <div>-->
 
 
-<!--              </div>-->
-<!--            </Menu>-->
-<!--            <div v-else class="text-green-500 font-semibold"> وارد شدید ! :)</div>-->
+          <!--              </div>-->
+          <!--            </Menu>-->
+          <!--            <div v-else class="text-green-500 font-semibold"> وارد شدید ! :)</div>-->
 
-<!--          </div>-->
+          <!--          </div>-->
         </div>
       </div>
     </div>
 
-    <DisclosurePanel class="sm:hidden">
-      <div class="space-y-1 px-2 pt-2 pb-3">
-        <DisclosureButton v-for="item in navigation" :key="item.name" as="a" :href="item.href"
-                          :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'block px-3 py-2 rounded-md text-base font-medium']"
-                          :aria-current="item.current ? 'page' : undefined">{{ item.name }}
-        </DisclosureButton>
-      </div>
-    </DisclosurePanel>
+<!--    <DisclosurePanel class="sm:hidden">-->
+<!--      <div class="space-y-1 px-2 pt-2 pb-3">-->
+<!--        <Menu as="div" class="relative ml-3" @click="toggleLoginPopUp()" v-if="!isLogin">-->
+<!--          <div class="flex gap-2">-->
+
+<!--            <div-->
+<!--                class="text-green-500 border-green-500 border px-8 py-1 rounded-xl hover:cursor-pointer ">-->
+<!--              ورود-->
+<!--            </div>-->
+
+<!--          </div>-->
+<!--        </Menu>-->
+<!--        <Menu as="div" class="relative ml-3" @click="toggleSignupPopUp()" v-if="!isSignup">-->
+<!--          <div>-->
+<!--            <div-->
+<!--                class="text-white bg-green-500 border-green-500 border px-8 py-1 rounded-xl hover:cursor-pointer ">-->
+<!--              ثبت نام-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </Menu>-->
+<!--      </div>-->
+<!--    </DisclosurePanel>-->
   </Disclosure>
   <v-snackbar
       v-model="snackbar.show"
@@ -176,6 +195,11 @@ export default {
     successSignup() {
       this.isSignupPopupShow = !this.isSignupPopupShow;
       this.isSignup = true;
+      this.snackbar = {
+        color: 'green',
+        show: true,
+        message: "با موفقیت ثبت نام شدید"
+      }
     },
     toggleNavigationActivation(item) {
       this.navigation.map(nav => {
