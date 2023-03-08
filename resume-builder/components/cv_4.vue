@@ -1,7 +1,8 @@
 <template>
   <loading class="h-screen" v-if="loading"/>
   <div
-      :style="'font-size: '+data.font_size+'px;font-family: '+ data.font_family+ '!important;max-width:90% ; margin: auto;'"
+      :style="'font-size: '+data.font_size+'px;font-family: '+ data.font_family+ '!important;max-width:90% ;'"
+      class="mt-24 mx-auto"
       v-else>
     <div class="flex flex-row pa-12">
       <div class="greenSide basis-1/4 text-white py-10 pr-5" :style="'background-color: '+data.color">
