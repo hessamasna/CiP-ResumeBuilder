@@ -58,10 +58,10 @@
             <v-expansion-panel-text class="mt-4">
                 <v-row v-for="(education,index) in resume.educations" :key="index" class="border-b">
                     <v-col cols=12 sm="3"> 
-                        <v-select :items="educationGrades" label="مقطع تحصیلی" v-model="education.grade"/>
+                        <v-select :items="educationGrades" label="مقطع تحصیلی" v-model="education.degree"/>
                     </v-col>
                     <v-col cols=12 sm="3"> 
-                        <v-text-field  label="نام دانشگاه" v-model="education.university"/>
+                        <v-text-field  label="نام دانشگاه" v-model="education.school"/>
                     </v-col>
                     <v-col cols=12 sm="3"> 
                         <v-text-field  label="سال آغار" v-model="education.start" />
@@ -154,6 +154,7 @@
             </v-expansion-panel-text>
         </v-expansion-panel>
    </v-expansion-panels>
+   <v-btn @click="submit" >kiiiiiiiiiir</v-btn>
   </div>
 </template>
 
@@ -189,8 +190,9 @@ export default {
                 image: '',
                 about_me: 'fffffff',
                 educations:[{
-                    grade: '',
-                    university: '',
+                    degree: '',
+                    major: '', //TODO ADD FORM FIELD FOR THIS
+                    school: '',
                     start: '',
                     end: ''
                 }],
@@ -235,8 +237,8 @@ export default {
         addNewEducationalHistory(){
             this.resume.educations.push(
                 {
-                    grade: '',
-                    university: '',
+                    degree: '',
+                    school: '',
                     start: '',
                     end: ''
                 }
@@ -263,8 +265,25 @@ export default {
                 link: ''
             })
         },
-        submit(){
-            console.log(this.resume)
+        async submit(){
+            console.log('in')
+            const y = JSON.stringify(this.resume)
+            console.log(y)
+            let fd = new FormData()
+            fd.append(y)
+            let api = 'http://localhost:3000/cv/create';
+            let res = await $fetch(api, {
+                method: 'POST',
+                body: JSON.stringify(resume),
+                headers: {
+                'access_token': this.$store.state.status.access_token,
+                'refresh_token': this.$store.state.status.refresh_token
+                },
+            }).then(res => {
+                console.log(res)
+            }).catch(error => {
+                console.log(error)
+            })
         }
     }
 }
