@@ -178,6 +178,11 @@ export default {
     successSignup() {
       this.isSignupPopupShow = !this.isSignupPopupShow;
       this.isSignup = true;
+      this.snackbar = {
+        color: 'green',
+        show: true,
+        message: "با موفقیت ثبت نام شدید"
+      }
     },
     toggleNavigationActivation(item) {
       this.navigation.map(nav => {

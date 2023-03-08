@@ -12,7 +12,7 @@
             
 
             <div class="mt-2">
-              <label for="email-address"
+              <label for="phone-number"
                      :class=" ['text-sm font-medium text-gray-700',this.showPhoneNumberError?'text-red-600':'']">
                 شماره تماس</label>
               <div class="relative mt-2 max-w-96">
@@ -26,7 +26,7 @@
                           fill="black" fill-opacity="0.2"/>
                   </svg>
                 </div>
-                <input type="text" id="input-group-1" v-model="username"
+                <input type="text" id="input-group-1" v-model="phone_number"
                        :class="['border border-solid border-gray-300 rounded-xl w-full ps-10 text-sm p-3 h-12', this.showPhoneNumberError?'border-red-600 text-red-600':'']"
                        placeholder="شماره تماس خود را وارد کنید">
               </div>
@@ -47,14 +47,14 @@
                           fill="black" fill-opacity="0.2"/>
                   </svg>
                 </div>
-                <input type="text" id="input-group-1" v-model="username"
+                <input type="text" id="input-group-2" v-model="email"
                        :class="['border border-solid border-gray-300 rounded-xl w-full ps-10 text-sm p-3 h-12', this.showEmailError?'border-red-600 text-red-600':'']"
                        placeholder="ایمیل خود را وارد کنید">
               </div>
             </div>
 
             <div class="mt-3">
-              <label for="email-address"
+              <label for="password"
                      :class=" ['text-sm font-medium text-gray-700',this.showPasswordError?'text-red-600':'']">رمز
                 عبور</label>
               <div class="relative mt-2 max-w-96">
@@ -72,7 +72,7 @@
                   </svg>
   
                 </div>
-                <input :type="showPassword? 'text': 'password'" id="input-group-1" v-model="password"
+                <input :type="showPassword? 'text': 'password'" id="input-group-3" v-model="password"
                        :class="['border border-solid border-gray-300 rounded-xl w-full ps-10 text-sm p-3 h-12', this.showPasswordError?'border-red-600 text-red-600':'']"
                        placeholder="رمز عبور خود را وارد کنید">
   
@@ -91,9 +91,10 @@
                 </div>
   
               </div>
+              <div class="text-center mt-4 text-red">{{ signupError }}</div>
             </div>
             <button
-                class=" mt-10 rounded-xl text-white align-middle bg-green-500 py-2" @click="login()">
+                class=" mt-10 rounded-xl text-white align-middle bg-green-500 py-2" @click="signup()">
               ثبت نام
             </button>
           </div>
@@ -115,11 +116,6 @@
         this.$emit('signupPopup')
       },
       async signup() {
-        if (this.username.length === 0) {
-          this.showUsernameError = true
-          return;
-        }
-
         if (this.phone_number.length === 0){
             this.showPhoneNumberError = true
             return;
@@ -135,29 +131,31 @@
             return;
         }
   
-        let api = 'http://localhost:3000/auth/logout'
+        let api = 'http://localhost:3000/auth/signup'
         let body = {
-          Email: this.username,
+          Email: this.email,
           Password: this.password,
-          Phone_number: this.Phone_number
+          Phone_number: this.phone_number
         }
   
         let res = await $fetch(api, {
           method: 'POST',
           body: JSON.stringify(body)
         }).then(res => {
-          //todo save in vueX
+          
           this.showPasswordError = false;
           this.showEmailError = false;
           this.showPhoneNumberError = false;
-          this.showUsernameError = false;
-          this.$emit('successLogin')
+
+          this.signupError= '';
+          this.$emit('successSignup')
         }).catch(error => {
           this.showPhoneNumberError = true;
           this.showPasswordError = true;
           this.showEmailError = true;
-          this.showUsernameError = true;
-          console.log(error)
+
+          console.log(error);
+          this.signupError = 'در ثبت نام مشکلی به وجود آمده است';
         })
   
       }
