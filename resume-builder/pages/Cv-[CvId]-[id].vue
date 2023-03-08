@@ -28,6 +28,7 @@
     </div>
     <cv1 :loading="loading" :data="data" v-if="cvTemplateId == 1"></cv1>
     <cv2 :loading="loading" :data="data" v-else-if="cvTemplateId == 2"></cv2>
+    <cv4 :loading="loading" :data="data" v-else-if="cvTemplateId == 4"></cv4>
     <div class="text-center">
       <!--      todo-->
       <v-btn @click="saveCv()">
