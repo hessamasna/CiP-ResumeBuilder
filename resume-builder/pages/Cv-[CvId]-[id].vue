@@ -1,31 +1,37 @@
 <template>
-  <div>
-    <div class="flex h-2 ">
-      <!--      todo fix style-->
-      <v-select
-          class="w-25"
+  <!-- <div class="mb-2 bg-black"> -->
+    <!-- <div class="mb-10 bg-black"> -->
+<!--      todo fix style-->
+    <v-row class="my-3 text-center px-5 mx-5">
+      <v-col cols="12" sm="4">
+        <v-select
           :items="fonts"
           v-model="data.font_family"
           item-value="value"
           item-text="title"
-      ></v-select>
-      <v-btn @click="showColorPicker = !showColorPicker">
+        ></v-select>
+      </v-col>
+      <v-col cols="12" sm="4">
+        <v-btn @click="showColorPicker = !showColorPicker" variant="text" append-icon="mdi-chevron-down">
         انتخاب رنگ
-      </v-btn>
-      <div dir="rtl" v-if="showColorPicker">
-        <v-color-picker
+        </v-btn>
+        <div dir="rtl" v-if="showColorPicker">
+          <v-color-picker
             v-model="data.color"
             hide-sliders
             hide-inputs
             show-swatches
-        ></v-color-picker>
+          ></v-color-picker>
       </div>
-      <v-text-field v-model="data.font_size" type="number" label="Number" append-outer-icon="add"
+      </v-col>
+
+      <v-col cols="12" sm="4">
+        <v-text-field v-model="data.font_size" type="number" label="Number" append-outer-icon="add"
                     @click:append-outer="increment"
-                    prepend-icon="remove" @click:prepend="decrement"></v-text-field>
-
-
-    </div>
+                    prepend-icon="remove" @click:prepend="decrement" />
+      </v-col>
+    </v-row>
+    <!-- </div> -->
     <cv1 :loading="loading" :data="data" v-if="cvTemplateId == 1"></cv1>
     <cv2 :loading="loading" :data="data" v-else-if="cvTemplateId == 2"></cv2>
     <cv4 :loading="loading" :data="data" v-else-if="cvTemplateId == 4"></cv4>
@@ -35,8 +41,7 @@
         ذخیره
       </v-btn>
     </div>
-  </div>
-
+  <!-- </div> -->
 </template>
 
 <script>
