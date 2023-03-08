@@ -1,32 +1,43 @@
 <template>
   <div>
     <loading class="h-screen" v-if="loading"/>
-    <div class="flex flex-row pa-12" :style="'font-family: '+ data.font+ '!important'" v-else>
+    <div class="flex flex-row pa-12" :style="'font-family: '+ data.font_family+ '!important'" v-else>
       <div class="basis-1/3 bg-neutral-800 text-white py-10 pr-5">
         <div class="relative overflow-hidden px-6">
-          <img :src="data.image"
-               class="max-w-full h-auto mx-auto rounded-full bg-gray-50 grayscale mb-4" alt="title image">
+<!--          <img :src="!!data.image?data.image:'https://tailone.tailwindtemplate.net/src/img/dummy/avatar1.png'"-->
+<!--               class="max-w-full h-auto mx-auto rounded-full bg-gray-50 grayscale mb-4" alt="title image">-->
+          <v-img lazy-src="https://tailone.tailwindtemplate.net/src/img/dummy/avatar1.png" :src="!!data.image?data.image:'https://tailone.tailwindtemplate.net/src/img/dummy/avatar1.png'"
+                 class="max-w-full h-auto mx-auto rounded-full bg-gray-50 grayscale mb-4" alt="title image">
+            <template v-slot:placeholder>
+              <div class="d-flex align-center justify-center fill-height">
+                <v-progress-circular
+                    color="green"
+                    indeterminate
+                ></v-progress-circular>
+              </div>
+            </template>
+          </v-img>
         </div>
         <div>
           <div class="mb-8">
             <span class="title">تحصیلات</span>
             <div class="divider_custom" :style="'background-color: '+data.color"></div>
             <div>
-              <div v-for="(education, index) in data.educations" :key="index" class="flex mb-4 mr-6">
+              <div v-for="(education, index) in data.education" :key="index" class="flex mb-4 mr-6">
                 <div>
                   <v-icon>mdi-square-small</v-icon>
                 </div>
-                <div class="flex flex-column mr-2" :style="'font-size: '+data.fontSize+'px'">
+                <div class="flex flex-column mr-2" :style="'font-size: '+data.font_size+'px'">
 
-                  <span class="text-lg font-weight-bold" :style="'font-size: '+data.fontSize+'px'">{{
-                      education.title
+                  <span class="text-lg font-weight-bold" :style="'font-size: '+data.font_size+'px'">{{
+                      education.major
                     }}</span>
-                  <span class="text-sm" :style="'font-size: '+data.fontSize+'px'">{{
-                      education.place
+                  <span class="text-sm" :style="'font-size: '+data.font_size+'px'">{{
+                      education.school
                     }} {{ education.degree }}</span>
-                  <span class="text-sm" :style="'font-size: '+data.fontSize+'px'">{{
-                      education.startDate
-                    }} - {{ education.endDate }}</span>
+                  <span class="text-sm" :style="'font-size: '+data.font_size+'px'">{{
+                      education.start
+                    }} - {{ education.end }}</span>
                 </div>
               </div>
             </div>
@@ -34,46 +45,46 @@
           <div class="mb-8">
             <span class="title">شبکه های اجتماعی</span>
             <div class="divider_custom" :style="'background-color: '+data.color"></div>
-            <div :style="'font-size: '+data.fontSize+'px'">
-              <div v-for="(social, index) in data.personal.social" :key="index"
+            <div :style="'font-size: '+data.font_size+'px'">
+              <div v-for="(social, index) in data.social_medias" :key="index"
                    class="flex mb-2 mr-6 align-center center">
-                <v-icon>mdi-{{ social.title }}</v-icon>
-                <NuxtLink :to="social.url" target="_blank" class=" mx-3">
-                  {{ social.path }}
+                <v-icon>mdi-{{ social.plat_form }}</v-icon>
+                <NuxtLink :to="social.link" target="_blank" class=" mx-3">
+                  {{ social.link }}
                 </NuxtLink>
               </div>
             </div>
           </div>
           <div class="align-self-end">
-            <div class="mb-2" :style="'font-size: '+data.fontSize+'px'">
+            <div class="mb-2" :style="'font-size: '+data.font_size+'px'">
               <span class="subtitle" :style="'border-color: '+data.color">شماره تماس:</span>
-              {{ data.personal.phone }}
+              {{ data.personal_info.phone_number }}
             </div>
-            <div class="mb-2" :style="'font-size: '+data.fontSize+'px'">
+            <div class="mb-2" :style="'font-size: '+data.font_size+'px'">
               <span class="subtitle" :style="'border-color: '+data.color">ایمیل:</span>
 
-              {{ data.personal.email }}
+              {{ data.personal_info.email }}
             </div>
-            <div class="mb-2" :style="'font-size: '+data.fontSize+'px'">
-              <span class="subtitle" :style="'border-color: '+data.color">وبسایت:</span>
+<!--            <div class="mb-2" :style="'font-size: '+data.font_size+'px'">-->
+<!--              <span class="subtitle" :style="'border-color: '+data.color">وبسایت:</span>-->
 
-              {{ data.personal.website }}
-            </div>
-            <div class="mb-2" :style="'font-size: '+data.fontSize+'px'">
+<!--              {{ data.personal.website }}-->
+<!--            </div>-->
+            <div class="mb-2" :style="'font-size: '+data.font_size+'px'">
               <span class="subtitle" :style="'border-color: '+data.color">آدرس:</span>
 
-              {{ data.personal.address }}
+              {{ data.personal_info.address }}
             </div>
           </div>
         </div>
       </div>
       <div class="basis-3/4 pb-5">
         <div class="pr-5 py-16" :style="'background-color: '+data.color">
-          <div class="text-5xl font-weight-bold" :style="'font-size: '+titleFontSize(data.fontSize) +'px'">
-            {{ data.personal.name }}
+          <div class="text-5xl font-weight-bold" :style="'font-size: '+titleFontSize(data.font_size) +'px'">
+            {{ data.personal_info.first_name }} {{data.personal_info.last_name}}
           </div>
-          <div class="text-2xl font-weight-thin pt-2 text-stone-700" :style="'font-size: '+data.fontSize+'px'">
-            {{ data.personal.cvTitle }}
+          <div class="text-2xl font-weight-thin pt-2 text-stone-700" :style="'font-size: '+data.font_size+'px'">
+            {{ data.job_title }}
           </div>
         </div>
         <div class="px-5">
@@ -81,23 +92,23 @@
           <div>
             <div class="title">درباره من</div>
             <div class="divider_custom" :style="'background-color: '+data.color"></div>
-            <div class="px-5" :style="'font-size: '+data.fontSize+'px'">{{ data.aboutMe }}</div>
+            <div class="px-5" :style="'font-size: '+data.font_size+'px'">{{ data.about_me }}</div>
           </div>
           <div>
             <div class="title">سابقه شغلی</div>
             <div class="divider_custom" :style="'background-color: '+data.color"></div>
-            <div v-for="(work,index) in data.workHistory" :key="index" class="px-5 flex mb-4">
+            <div v-for="(work,index) in data.experience" :key="index" class="px-5 flex mb-4">
               <div>
                 <v-icon :color="data.color">mdi-square-small</v-icon>
               </div>
               <div class="flex flex-column mr-2">
-                <div class="text-lg font-weight-bold" :style="'font-size: '+data.fontSize+'px'">{{ work.title }}</div>
-                <div class="text-sm" :style="'font-size: '+data.fontSize+'px'">{{ work.place }}</div>
-                <div class="text-sm" :style="'font-size: '+data.fontSize+'px'">{{ work.startDate }} - {{
-                    work.endDate
+                <div class="text-lg font-weight-bold" :style="'font-size: '+data.font_size+'px'">{{ work.title }}</div>
+                <div class="text-sm" :style="'font-size: '+data.font_size+'px'">{{ work.company }}</div>
+                <div class="text-sm" :style="'font-size: '+data.font_size+'px'">{{ work.start }} - {{
+                    work.end
                   }}
                 </div>
-                <div class="text-sm" :style="'font-size: '+data.fontSize+'px'"> {{ work.description }}</div>
+                <div class="text-sm" :style="'font-size: '+data.font_size+'px'"> {{ work.description }}</div>
               </div>
             </div>
           </div>
@@ -107,11 +118,11 @@
             <div class="grid grid-cols-4 gap-4">
 
               <div v-for="(skill,index) in data.skills" :key="index" class="px-5 ">
-                <div class="font-weight-bold" :style="'font-size: '+data.fontSize+'px'">
-                  {{ skill.title }}
+                <div class="font-weight-bold" :style="'font-size: '+data.font_size+'px'">
+                  {{ skill.name }}
                 </div>
                 <div>
-                  <v-progress-linear :color="data.color" :model-value="skill.amount"></v-progress-linear>
+                  <v-progress-linear :color="data.color" :model-value="skill.percent"></v-progress-linear>
                 </div>
               </div>
 

@@ -29,12 +29,16 @@
           </div>
           <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             <Menu as="div" class="relative ml-3" @click="toggleLoginPopUp()" v-if="!isLogin">
-              <div>
+              <div class="flex gap-2">
+
                 <div
                     class="text-green-500 border-green-500 border px-8 py-1 rounded-xl hover:cursor-pointer ">
                   ورود
                 </div>
-
+                <div
+                    class="text-white bg-green-500 border-green-500 border px-8 py-1 rounded-xl hover:cursor-pointer ">
+                  ثبت نام
+                </div>
               </div>
             </Menu>
 
@@ -51,24 +55,18 @@
                 خروج
               </div>
             </div>
-
-            <div v-else class="text-green-500 font-semibold"> وارد شدید ! :)</div>
-
           </div>
 
-          <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            <Menu as="div" class="relative ml-3" @click="toggleSignupPopUp()" v-if="!isSignup">
-              <div>
-                <div
-                    class="text-white bg-green-500 border-green-500 border px-8 py-1 rounded-xl hover:cursor-pointer ">
-                  ثبت نام
-                </div>
+<!--          <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">-->
+<!--            <Menu as="div" class="relative ml-3" @click="toggleSignupPopUp()" v-if="!isSignup">-->
+<!--              <div>-->
 
-              </div>
-            </Menu>
-            <div v-else class="text-green-500 font-semibold"> وارد شدید ! :)</div>
-            
-          </div>
+
+<!--              </div>-->
+<!--            </Menu>-->
+<!--            <div v-else class="text-green-500 font-semibold"> وارد شدید ! :)</div>-->
+
+<!--          </div>-->
         </div>
       </div>
     </div>
