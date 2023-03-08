@@ -1,12 +1,12 @@
 <template>
   <loading class="h-screen" v-if="loading"/>
   <div class="pa-8" v-else>
-    <div class="text-center text-2xl flex flex-column gap-2" v-if="resumes.length === 0">
-      <span> رزومه فعالی ندارید :)</span>
-      <v-btn color="green" to="new-resume">
-        ساخت رزومه جدید
-      </v-btn>
-    </div>
+<!--    <div class="text-center text-2xl flex flex-column gap-2" >-->
+<!--      <span> رزومه فعالی ندارید :)</span>-->
+<!--      <v-btn color="green" to="new-resume">-->
+<!--        ساخت رزومه جدید-->
+<!--      </v-btn>-->
+<!--    </div>-->
 
     <div class="grid grid-flow-col auto-cols-max gap-8 	">
 
@@ -42,7 +42,7 @@
             </v-btn>
           </NuxtLink>
           <v-spacer></v-spacer>
-          <NuxtLink :to="`edit/Cv-${resume.template_number}-${resume.id}`" class="">
+          <NuxtLink :to="`new-resume-${resume.id}`" class="">
             <v-btn
                 class="px-0 mx-0"
                 color="orange-lighten-2"
@@ -65,7 +65,7 @@
 
       </v-card>
 
-      <NuxtLink to="new-resume" class="bg-green border-dashed border-4 border-black w-52 flex justify-center align-center">
+      <NuxtLink  to="new-resume-0" class="bg-green border-dashed border-4 border-black w-52 flex justify-center align-center h-[270px]">
           <v-icon icon="mdi-plus" size="large"></v-icon>
           ساخت رزومه جدید
       </NuxtLink>

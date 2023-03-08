@@ -15,7 +15,9 @@
           </div>
           <div class="flex flex-1 items-center sm:gap-28 sm:justify-start ">
             <div class="flex flex-shrink-0 items-center">
-              <img src="/img/logo.png" class="h-16"/>
+              <NuxtLink to="/">
+                <img src="/img/logo.png" class="h-16"/>
+              </NuxtLink>
             </div>
             <div class="hidden sm:ml-6 sm:block  ">
               <div class="flex items-center gap-4 ">
@@ -144,9 +146,40 @@ export default {
     login
   },
   created() {
+    // // this.info = token;
+    // // this.isLogin = this.info.isLoggedIn;
+    // console.log(localStorage.hasItem('access_token'));
+    // let access_token =  localStorage.hasItem('access_token') ? localStorage.getItem('access_token') : ''
+    // let refresh_token =  localStorage.hasItem('refresh_token') ? localStorage.getItem('refresh_token') : ''
+    // // let refresh_token = localStorage.getItem('refresh_token')
+    // // let userId = localStorage.getItem('userId')
+    // if (!!access_token && !!refresh_token && !!userId){
+    //   this.$store.commit('setStatus', {
+    //     isLoggedIn: true,
+    //     access_token: access_token,
+    //     refresh_token: refresh_token,
+    //     Email: this.username,
+    //     id: userId
+    //   })
+    // }
+    // this.isLogin = this.$store.state.status.isLoggedIn;
+  },
+  mounted() {
     // this.info = token;
     // this.isLogin = this.info.isLoggedIn;
-    console.log('isLoggedIn: ' + this.$store.state.status.isLoggedIn);
+    let access_token =  localStorage.getItem('access_token');
+    let refresh_token =  localStorage.getItem('refresh_token');
+    let userId = localStorage.getItem('userId')
+
+    if (!!access_token && !!refresh_token && !!userId){
+      this.$store.commit('setStatus', {
+        isLoggedIn: true,
+        access_token: access_token,
+        refresh_token: refresh_token,
+        Email: this.username,
+        id: userId
+      })
+    }
     this.isLogin = this.$store.state.status.isLoggedIn;
   },
   methods: {
@@ -169,7 +202,9 @@ export default {
         Email: '',
       })
       this.$store.commit('setLoginData', {})
-
+      localStorage.removeItem('access_token')
+      localStorage.removeItem('refresh_token')
+      localStorage.removeItem('userId')
       this.snackbar = {
         color: 'green',
         show: true,
@@ -190,6 +225,9 @@ export default {
         show: true,
         message: "با موفقیت وارد شدید"
       }
+      localStorage.setItem('access_token',this.$store.state.status.access_token)
+      localStorage.setItem('refresh_token',this.$store.state.status.refresh_token)
+      localStorage.setItem('userId',this.$store.state.status.id)
       this.isLogin = true;
     },
     successSignup() {

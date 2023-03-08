@@ -1,42 +1,78 @@
 <template>
-  <div>
-    <div class="flex h-2 ">
-      <!--      todo fix style-->
+  <!-- <div class="mb-2 bg-black"> -->
+  <!-- <div class="mb-10 bg-black"> -->
+  <!--      todo fix style-->
+  <v-row class="mt-3 text-center px-5 mx-5" justify="center" align="start">
+    <v-col cols="12" sm="2">
       <v-select
-          class="w-25"
+          variant="outlined"
+          hide-details=true
           :items="fonts"
           v-model="data.font_family"
           item-value="value"
           item-text="title"
       ></v-select>
-      <v-btn @click="showColorPicker = !showColorPicker">
+    </v-col>
+    <v-col cols="12" sm="1">
+      <v-btn @click="showColorPicker = !showColorPicker" variant="outlined" append-icon="mdi-chevron-down" height="56">
         انتخاب رنگ
       </v-btn>
-      <div dir="rtl" v-if="showColorPicker">
-        <v-color-picker
-            v-model="data.color"
-            hide-sliders
-            hide-inputs
-            show-swatches
-        ></v-color-picker>
-      </div>
-      <v-text-field v-model="data.font_size" type="number" label="Number" append-outer-icon="add"
+      <v-dialog
+          v-model="showColorPicker"
+          width="auto"
+      >
+        <v-card>
+          <v-card-text>
+            <v-color-picker
+                v-model="data.color"
+                hide-sliders
+                hide-inputs
+                show-swatches
+            ></v-color-picker>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn  color="green" variant="flat" block @click="showColorPicker = false">ذخیره رنگ</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-col>
+
+    <v-col cols="12" sm="2">
+      <v-text-field hide-details=true variant="outlined" v-model.number="data.font_size" type="number" label="Number" append-outer-icon="add"
                     @click:append-outer="increment"
-                    prepend-icon="remove" @click:prepend="decrement"></v-text-field>
+                     @click:prepend="decrement"/>
+    </v-col>
 
 
-    </div>
-    <cv1 :loading="loading" :data="data" v-if="cvTemplateId == 1"></cv1>
-    <cv2 :loading="loading" :data="data" v-else-if="cvTemplateId == 2"></cv2>
-    <cv4 :loading="loading" :data="data" v-else-if="cvTemplateId == 4"></cv4>
-    <div class="text-center">
-      <!--      todo-->
-      <v-btn @click="saveCv()">
+  </v-row>
+  <v-row justify="center" align="start" class="mb-4">
+    <v-col cols="12" sm="2">
+      <v-btn color="green" variant="flat" block @click="saveCv()">
         ذخیره
       </v-btn>
-    </div>
-  </div>
+    </v-col>
+  </v-row>
+  <!-- </div> -->
+  <cv1 :loading="loading" :data="data" v-if="cvTemplateId == 1"></cv1>
+  <cv2 :loading="loading" :data="data" v-else-if="cvTemplateId == 2"></cv2>
+  <cv4 :loading="loading" :data="data" v-else-if="cvTemplateId == 4"></cv4>
+  <!-- </div> -->
+  <v-snackbar
+      v-model="snackbar.show"
+      :timeout="5000"
+      :color="snackbar.color"
+  >
+    {{ snackbar.message }}
 
+    <template v-slot:actions>
+      <v-btn
+          variant="flat"
+          @click="snackbar.show = false"
+      >
+        متوجه شدم
+      </v-btn>
+    </template>
+  </v-snackbar>
 </template>
 
 <script>
@@ -60,82 +96,6 @@ export default {
       this.loading = false;
       this.data = res.result;
     }).catch(error => {
-      // this.data = {
-      //   image: "https://tailone.tailwindtemplate.net/src/img/dummy/avatar1.png",
-      //   font: 'vazir-FD',
-      //   color: "#ffa500",
-      //   fontSize: 15,
-      //   cv_temp: 1,
-      //   cv_name: "رزومه اول",
-      //   personal: {
-      //     name: "سیپ سی ویq",
-      //     cvTitle: "توسعه دهنده",
-      //     phone: "09121112233",
-      //     age:22,
-      //     email: "Cv@cipCv.com",
-      //     website: "www.cipCv.com",
-      //     address: "Tehran",
-      //     social: [
-      //       {
-      //         title: "linkedin",
-      //         path: "CipCV",
-      //         url: "https://linkedin.com/cipC"
-      //       },
-      //       {
-      //         title: "instagram",
-      //         path: "CipCV",
-      //         url: "https://instagram.com/CipCv"
-      //       },
-      //     ]
-      //   },
-      //   aboutMe: "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز، و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد، کتابهای زیادی در شصت و سه درصد گذشته حال و آینده، شناخت فراوان جامعه و متخصصان را می طلبد، تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی، و فرهنگ پیشرو در زبان فارسی ایجاد کرد، در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها، و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی، و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.",
-      //   workHistory: [
-      //     {
-      //       title: 'FrontEnd Developer',
-      //       startDate: '2021',
-      //       endDate: '2022',
-      //       place: "Sharif",
-      //       description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem explicabo impedit magni reiciendis suscipit! Adipisci deleniti earum eveniet incidunt ipsa libero modi, molestiae nobis pariatur quod repellat, repudiandae rerum sit!"
-      //     },
-      //     {
-      //       title: 'توسعه دهنده فرانت',
-      //       startDate: '1399',
-      //       endDate: '1400',
-      //       place: "دانشگاه صنعتی شریف",
-      //       description: " زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی، و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد."
-      //     }
-      //   ],
-      //   skills: [
-      //     {
-      //       title: "Java",
-      //       amount: 80,
-      //     },
-      //     {
-      //       title: 'JS',
-      //       amount: 85,
-      //     },
-      //     {
-      //       title: 'Ruby',
-      //       amount: 20,
-      //     }
-      //   ],
-      //   educations: [
-      //     {
-      //       title: "مهندسی کامپیوتر",
-      //       place: "صنعتی شریف",
-      //       degree: "کارشناسی",
-      //       startDate: "1398",
-      //       endDate: "1402",
-      //     },
-      //     {
-      //       title: "مهندسی کامپیوتر",
-      //       place: "صنعتی شریف",
-      //       degree: "کارشناسی ارشد",
-      //       startDate: "1402",
-      //       endDate: "1406",
-      //     },
-      //   ]
-      // }
       this.loading = true;
       this.loading = false;
       console.log(error)
@@ -152,6 +112,11 @@ export default {
       showColorPicker: false,
       loading: true,
       picker: null,
+      snackbar: {
+        color: null,
+        show: false,
+        message: "با موفقیت پاک شد"
+      },
       fonts: [
         {
           title: 'ایران سنس',
@@ -190,8 +155,18 @@ export default {
         },
         body: JSON.stringify(this.data)
       }).then(res => {
+        this.snackbar = {
+          color: 'green',
+          show: true,
+          message: 'با موفقیت ذخیره شد'
+        }
         // console.log(res)
       }).catch(error => {
+        this.snackbar = {
+          color: 'red',
+          show: true,
+          message: 'خطایی رخ داده است'
+        }
         console.log(error)
       })
     },
