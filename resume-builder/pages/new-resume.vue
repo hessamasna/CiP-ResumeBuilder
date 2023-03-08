@@ -56,7 +56,7 @@
         </v-expansion-panel>
         <v-expansion-panel class="pa-5" :title="FORM_NAMES.EDUCATIONAL_INFO">
             <v-expansion-panel-text class="mt-4">
-                <v-row v-for="(education,index) in resume.educations" :key="index" class="border-b">
+                <v-row v-for="(education,index) in resume.education" :key="index" class="border-b">
                     <v-col cols=12 sm="3"> 
                         <v-select :items="educationGrades" label="مقطع تحصیلی" v-model="education.degree"/>
                     </v-col>
@@ -81,7 +81,7 @@
         </v-expansion-panel>
         <v-expansion-panel title="سوابق کاری" class="pa-5">
             <v-expansion-panel-text>
-                <div v-for="(workExperience,index) in resume.experiences" :key="index" class="border-b">
+                <div v-for="(workExperience,index) in resume.experience" :key="index" class="border-b">
                     <v-row class="mt-5">
                         <v-col cols=12 sm="3">
                             <v-text-field label="عنوان شغلی" v-model="workExperience.title" />
@@ -175,28 +175,31 @@ export default {
                 ABOUT_ME_PLACEHOLDER : 'چند خطی درباره من',
             },
             resume :{
+                font_size: 15,
+                font_family: 'IRANSans',
+                color: '#FFA500',
                 personal_info: {
                     first_name: '',
                     last_name: '',
                     email: '',
                     phone_number: '',
                     address: '',
-                    age: ''
+                    age: 22
                 },
                 title: '',
-                template_number: '',
+                template_number: 1,
                 job_title: '',
                 location: '',
                 image: '',
-                about_me: 'fffffff',
-                educations:[{
+                about_me: '',
+                education:[{
                     degree: '',
                     major: '', //TODO ADD FORM FIELD FOR THIS
                     school: '',
                     start: '',
                     end: ''
                 }],
-                experiences:[{
+                experience:[{
                     title: '',
                     company: '',
                     start: '',
@@ -205,7 +208,7 @@ export default {
                 }],
                 skills:[{
                     name: '',
-                    percent: ''
+                    percent: 0
                 }],
                 social_medias:[{
                     plat_form: '',
@@ -235,7 +238,7 @@ export default {
     },
     methods:{
         addNewEducationalHistory(){
-            this.resume.educations.push(
+            this.resume.education.push(
                 {
                     degree: '',
                     school: '',
@@ -245,7 +248,7 @@ export default {
             )
         },
         addNewWorkExperience(){
-            this.resume.experiences.push({
+            this.resume.experience.push({
                     title: '',
                     company: '',
                     start: '',
@@ -268,13 +271,14 @@ export default {
         async submit(){
             console.log('in')
             const y = JSON.stringify(this.resume)
+            // console.log(y)
+            // let fd = new FormData()
+            // fd.append(y)
             console.log(y)
-            let fd = new FormData()
-            fd.append(y)
             let api = 'http://localhost:3000/cv/create';
             let res = await $fetch(api, {
                 method: 'POST',
-                body: JSON.stringify(resume),
+                body: JSON.stringify(this.resume),
                 headers: {
                 'access_token': this.$store.state.status.access_token,
                 'refresh_token': this.$store.state.status.refresh_token

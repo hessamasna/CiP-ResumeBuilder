@@ -4,7 +4,7 @@ type CVDto struct {
 	ID             int              `json:"id"`
 	UserID         uint             `json:"user_id"`
 	PersonalInfo   PersonalInfoDto  `json:"personal_info"`
-	About_me       string           `json:"about_me"`
+	AboutMe       string           `json:"about_me"`
 	Educations     []EducationDto   `json:"education"`
 	Experiences    []ExperienceDto  `json:"experience"`
 	Skills         []SkillDto       `json:"skills"`
