@@ -7,17 +7,17 @@
             <v-expansion-panel-text class="mt-5">
                 <v-row>
                     <v-col cols="12" sm="4">
-                        <v-text-field label="عنوان رزومه" :v-model="resume.resumeTitle" />
+                        <v-text-field label="عنوان رزومه" v-model="resume.title" />
                     </v-col>
                 </v-row>
                 <v-row>
                     <v-col cols="12" sm="4">
-                        <v-text-field label="عنوان شغلی" :v-model="resume.jobTitle" />
+                        <v-text-field label="عنوان شغلی" v-model="resume.job_title" />
                     </v-col>
                 </v-row>
                 <v-row>
                     <v-col cols='12' sm="4">
-                        <v-select :items="resumeTemplates" item-title="description" item-value="id" label="قالب مدنظر شما"/>
+                        <v-select :items="resumeTemplates" item-title="description" item-value="id" label="قالب مدنظر شما" v-model="resume.template_number"/>
                     </v-col>
                 </v-row>
 
@@ -27,47 +27,47 @@
             <v-expansion-panel-text class="mt-4" >
                 <v-row>
                 <v-col cols="12" sm='4'>
-                    <v-text-field :label="FORM_NAMES.FIRST_NAME" :v-model="resume.firstName"/>
+                    <v-text-field :label="FORM_NAMES.FIRST_NAME" v-model="resume.personal_info.first_name"/>
                 </v-col>
                 <v-col cols="12" sm='4'>
-                    <v-text-field :label="FORM_NAMES.LAST_NAME" :v-model="resume.lastName"/>
+                    <v-text-field :label="FORM_NAMES.LAST_NAME" v-model="resume.personal_info.last_name"/>
                 </v-col>
                 <v-col cols="12" sm='4'>
-                    <v-text-field :label="FORM_NAMES.AGE" :v-model="resume.age"/>
+                    <v-text-field :label="FORM_NAMES.AGE" v-model="resume.personal_info.age"/>
                 </v-col>
             </v-row>
             <v-row>
                 <v-col cols="12" sm="4">
-                    <v-text-field :label="FORM_NAMES.PHONE"  :v-model="resume.phoneNumber" counter maxlength="11" />
+                    <v-text-field :label="FORM_NAMES.PHONE"  v-model="resume.personal_info.phone_number" counter maxlength="11" />
                 </v-col>
                 <v-col cols="12" sm="4">
-                    <v-text-field :label="FORM_NAMES.EMAIL"  :v-model="resume.email"/>
+                    <v-text-field :label="FORM_NAMES.EMAIL"  v-model="resume.personal_info.email"/>
                 </v-col>
                 <v-col cols="12" sm="4">
-                    <v-file-input label="عکس پروفایل"  :v-model="resume.image" />
+                    <v-file-input label="عکس پروفایل"  v-model="resume.image" />
                 </v-col>
             </v-row>
             <v-row>
                 <v-col cols="12">
-                    <v-textarea  :label="FORM_NAMES.ABOUT_ME" :v-model="resume.aboutMe" clearable :hint="FORM_NAMES.ABOUT_ME_PLACEHOLDER" counter />
+                    <v-textarea  :label="FORM_NAMES.ABOUT_ME" v-model="resume.about_me" clearable :hint="FORM_NAMES.ABOUT_ME_PLACEHOLDER" counter />
                 </v-col>
             </v-row>
             </v-expansion-panel-text>
         </v-expansion-panel>
         <v-expansion-panel class="pa-5" :title="FORM_NAMES.EDUCATIONAL_INFO">
             <v-expansion-panel-text class="mt-4">
-                <v-row v-for="(education,index) in resume.educations" :key="index" class="border-b">
+                <v-row v-for="(education,index) in resume.education" :key="index" class="border-b">
                     <v-col cols=12 sm="3"> 
-                        <v-select :items="educationGrades" label="مقطع تحصیلی" :v-model="education.grade"/>
+                        <v-select :items="educationGrades" label="مقطع تحصیلی" v-model="education.degree"/>
                     </v-col>
                     <v-col cols=12 sm="3"> 
-                        <v-text-field  label="نام دانشگاه" :v-model="education.university"/>
+                        <v-text-field  label="نام دانشگاه" v-model="education.school"/>
                     </v-col>
                     <v-col cols=12 sm="3"> 
-                        <v-text-field  label="سال آغار" :v-model="education.start" />
+                        <v-text-field  label="سال آغار" v-model="education.start" />
                     </v-col>
                     <v-col cols=12 sm="3"> 
-                        <v-text-field label="سال پایان" :v-model="education.end"/>
+                        <v-text-field label="سال پایان" v-model="education.end"/>
                     </v-col>
                 </v-row>
                 <v-row class="mt-5">
@@ -81,26 +81,26 @@
         </v-expansion-panel>
         <v-expansion-panel title="سوابق کاری" class="pa-5">
             <v-expansion-panel-text>
-                <div v-for="(workExperience,index) in resume.workExperiences" :key="index" class="border-b">
+                <div v-for="(workExperience,index) in resume.experience" :key="index" class="border-b">
                     <v-row class="mt-5">
                         <v-col cols=12 sm="3">
-                            <v-text-field label="عنوان شغلی" :v-model="workExperience.title" />
+                            <v-text-field label="عنوان شغلی" v-model="workExperience.title" />
                         </v-col>
                     </v-row>
                     <v-row>
                         <v-col cols="12" sm="4">
-                            <v-text-field label="نام شرکت" :v-model="workExperience.company" />
+                            <v-text-field label="نام شرکت" v-model="workExperience.company" />
                         </v-col>
                         <v-col cols="6" sm="2">
-                            <v-text-field label="سال شروع" :v-model="workExperience.start" />
+                            <v-text-field label="سال شروع" v-model="workExperience.start" />
                         </v-col>
                         <v-col cols="6" sm="2">
-                            <v-text-field label="سال پایان" :v-model="workExperience.end" />
+                            <v-text-field label="سال پایان" v-model="workExperience.end" />
                         </v-col>
                     </v-row>
                     <v-row>
                         <v-col cols="12">
-                            <v-textarea label="درباره سابقه" :v-model="workExperience.description" clearable counter />
+                            <v-textarea label="درباره سابقه" v-model="workExperience.description" clearable counter />
                         </v-col>
                     </v-row>
                 </div>
@@ -118,10 +118,10 @@
             <v-expansion-panel-text class="mt-5">
                 <v-row v-for="(skill,index) in resume.skills" :key="index" class="border-b mt-5">
                     <v-col cols=12 sm="3">
-                        <v-text-field label="توانایی" :v-model="skill.title"  />
+                        <v-text-field label="توانایی" v-model="skill.name"  />
                     </v-col>
                     <v-col cols=12 sm="3">
-                        <v-text-field label="میزان تسلط" :v-model="skill.amount" hint="در بازه ۱ تا ۱۰۰"  />
+                        <v-text-field label="میزان تسلط" v-model="skill.percent" hint="در بازه ۱ تا ۱۰۰"  />
                     </v-col>
                 </v-row>
                 <v-row>
@@ -136,12 +136,12 @@
         <v-expansion-panel class="pa-5">
             <v-expansion-panel-title>راه های ارتباطی</v-expansion-panel-title>
             <v-expansion-panel-text class="mt-5">
-                <v-row v-for="media,index in resume.socialMedias" :key="index" class="border-b">
+                <v-row v-for="media,index in resume.social_medias" :key="index" class="border-b">
                     <v-col cols="6" sm="3">
-                        <v-select :items="socialMedias" label="راه ارتباطی" :v-model="media.media" />
+                        <v-select :items="socialMedias" label="راه ارتباطی" v-model="media.plat_form" />
                     </v-col>
                     <v-col cols="6" sm="3">
-                        <v-text-field label="آدرس" :v-model="media.url" />
+                        <v-text-field label="آدرس" v-model="media.link" />
                     </v-col>
                 </v-row>
                 <v-row>
@@ -154,6 +154,7 @@
             </v-expansion-panel-text>
         </v-expansion-panel>
    </v-expansion-panels>
+   <v-btn @click="submit" >kiiiiiiiiiir</v-btn>
   </div>
 </template>
 
@@ -174,24 +175,31 @@ export default {
                 ABOUT_ME_PLACEHOLDER : 'چند خطی درباره من',
             },
             resume :{
-                resumeTitle: '',
-                resumeTemplate: '',
-                jobTitle: '',
-                firstName: '',
-                lastName: '',
-                age: '',
-                email: '',
-                phoneNumber: '',
+                font_size: 15,
+                font_family: 'IRANSans',
+                color: '#FFA500',
+                personal_info: {
+                    first_name: '',
+                    last_name: '',
+                    email: '',
+                    phone_number: '',
+                    address: '',
+                    age: 22
+                },
+                title: '',
+                template_number: 1,
+                job_title: '',
                 location: '',
                 image: '',
-                aboutMe: 'fffffff',
-                educations:[{
-                    grade: '',
-                    university: '',
+                about_me: '',
+                education:[{
+                    degree: '',
+                    major: '', //TODO ADD FORM FIELD FOR THIS
+                    school: '',
                     start: '',
                     end: ''
                 }],
-                workExperiences:[{
+                experience:[{
                     title: '',
                     company: '',
                     start: '',
@@ -199,12 +207,12 @@ export default {
                     description: ''
                 }],
                 skills:[{
-                    title: '',
-                    amount: ''
+                    name: '',
+                    percent: 0
                 }],
-                socialMedias:[{
-                    media: '',
-                    url: ''
+                social_medias:[{
+                    plat_form: '',
+                    link: ''
                 }]
             },
             validators:{
@@ -222,7 +230,7 @@ export default {
                         description: 'قالب دوم'
                     },
                     {
-                        id:3,
+                        id:4,
                         description: 'قالب سوم'
                     }
                 ]
@@ -230,17 +238,17 @@ export default {
     },
     methods:{
         addNewEducationalHistory(){
-            this.resume.educations.push(
+            this.resume.education.push(
                 {
-                    grade: '',
-                    university: '',
+                    degree: '',
+                    school: '',
                     start: '',
                     end: ''
                 }
             )
         },
         addNewWorkExperience(){
-            this.resume.workExperiences.push({
+            this.resume.experience.push({
                     title: '',
                     company: '',
                     start: '',
@@ -250,18 +258,36 @@ export default {
         },
         addNewSkill(){
             this.resume.skills.push({
-                title:'',
-                amount: ''
+                name:'',
+                percent: ''
             })
         },
         addNewSocialMedia(){
-            this.resume.socialMedias.push({
-                media: '',
-                url: ''
+            this.resume.social_medias.push({
+                plat_form: '',
+                link: ''
             })
         },
-        submit(){
-            console.log(this.resume)
+        async submit(){
+            console.log('in')
+            const y = JSON.stringify(this.resume)
+            // console.log(y)
+            // let fd = new FormData()
+            // fd.append(y)
+            console.log(y)
+            let api = 'http://localhost:3000/cv/create';
+            let res = await $fetch(api, {
+                method: 'POST',
+                body: JSON.stringify(this.resume),
+                headers: {
+                'access_token': this.$store.state.status.access_token,
+                'refresh_token': this.$store.state.status.refresh_token
+                },
+            }).then(res => {
+                console.log(res)
+            }).catch(error => {
+                console.log(error)
+            })
         }
     }
 }
