@@ -146,11 +146,31 @@ export default {
     login
   },
   created() {
+    // // this.info = token;
+    // // this.isLogin = this.info.isLoggedIn;
+    // console.log(localStorage.hasItem('access_token'));
+    // let access_token =  localStorage.hasItem('access_token') ? localStorage.getItem('access_token') : ''
+    // let refresh_token =  localStorage.hasItem('refresh_token') ? localStorage.getItem('refresh_token') : ''
+    // // let refresh_token = localStorage.getItem('refresh_token')
+    // // let userId = localStorage.getItem('userId')
+    // if (!!access_token && !!refresh_token && !!userId){
+    //   this.$store.commit('setStatus', {
+    //     isLoggedIn: true,
+    //     access_token: access_token,
+    //     refresh_token: refresh_token,
+    //     Email: this.username,
+    //     id: userId
+    //   })
+    // }
+    // this.isLogin = this.$store.state.status.isLoggedIn;
+  },
+  mounted() {
     // this.info = token;
     // this.isLogin = this.info.isLoggedIn;
-    let access_token = localStorage.getItem('access_token')
-    let refresh_token = localStorage.getItem('refresh_token')
+    let access_token =  localStorage.getItem('access_token');
+    let refresh_token =  localStorage.getItem('refresh_token');
     let userId = localStorage.getItem('userId')
+
     if (!!access_token && !!refresh_token && !!userId){
       this.$store.commit('setStatus', {
         isLoggedIn: true,
@@ -160,7 +180,6 @@ export default {
         id: userId
       })
     }
-    console.log('isLoggedIn: ' + this.$store.state.status.isLoggedIn);
     this.isLogin = this.$store.state.status.isLoggedIn;
   },
   methods: {

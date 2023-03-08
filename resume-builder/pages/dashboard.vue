@@ -42,7 +42,7 @@
             </v-btn>
           </NuxtLink>
           <v-spacer></v-spacer>
-          <NuxtLink :to="`edit/Cv-${resume.template_number}-${resume.id}`" class="">
+          <NuxtLink :to="`new-resume-${resume.id}`" class="">
             <v-btn
                 class="px-0 mx-0"
                 color="orange-lighten-2"
@@ -65,7 +65,7 @@
 
       </v-card>
 
-      <NuxtLink  to="new-resume" class="bg-green border-dashed border-4 border-black w-52 flex justify-center align-center h-[270px]">
+      <NuxtLink  to="new-resume-0" class="bg-green border-dashed border-4 border-black w-52 flex justify-center align-center h-[270px]">
           <v-icon icon="mdi-plus" size="large"></v-icon>
           ساخت رزومه جدید
       </NuxtLink>

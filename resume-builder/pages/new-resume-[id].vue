@@ -42,12 +42,12 @@
               <v-text-field :label="FORM_NAMES.PHONE" v-model="resume.personal_info.phone_number" counter
                             maxlength="11"/>
             </v-col>
-            <v-col cols="12" sm="4">
+            <v-col cols="12" sm="8">
               <v-text-field :label="FORM_NAMES.EMAIL" v-model="resume.personal_info.email"/>
             </v-col>
-            <v-col cols="12" sm="4">
-              <v-file-input label="عکس پروفایل" v-model="resume.image"/>
-            </v-col>
+            <!--            <v-col cols="12" sm="4">-->
+            <!--              <v-file-input label="عکس پروفایل" v-model="resume.image"/>-->
+            <!--            </v-col>-->
           </v-row>
           <v-row>
             <v-col cols="12">
@@ -124,7 +124,7 @@
               <v-text-field label="توانایی" v-model="skill.name"/>
             </v-col>
             <v-col cols=12 sm="3">
-              <v-text-field label="میزان تسلط" v-model="skill.percent" hint="در بازه ۱ تا ۱۰۰"/>
+              <v-text-field label="میزان تسلط" v-model.number="skill.percent" hint="در بازه ۱ تا ۱۰۰"/>
             </v-col>
           </v-row>
           <v-row>
@@ -158,14 +158,77 @@
         </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
-    <v-btn @click="submit">kiiiiiiiiiir</v-btn>
+    <v-btn @click="submit" color="green" variant="flat" block class="text-center mt-8 px-8">ذخیره</v-btn>
+    <v-snackbar
+        v-model="snackbar.show"
+        :timeout="5000"
+        :color="snackbar.color"
+
+
+    >
+      <div class="text-center rtl">
+
+        {{ snackbar.message }}
+      </div>
+
+      <template v-slot:actions>
+        <v-btn
+            variant="flat"
+            @click="snackbar.show = false"
+        >
+          متوجه شدم
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
+
 </template>
 
 <script>
 export default {
+  async created() {
+    let id = this.$route.params.id
+    if (id != 0) {
+      let api = 'http://localhost:3000/cv/get/' + id;
+
+      let res = await $fetch(api, {
+        method: 'GET',
+        headers: {
+          'access_token': this.$store.state.status.access_token,
+          'refresh_token': this.$store.state.status.refresh_token
+        },
+      }).then(res => {
+        // //todo
+        // this.resume.font_size = res.font_size
+        // this.resume.font_family = res.font_family
+        // this.resume.color = res.color
+        // this.resume.personal_info = res.personal_info
+        // this.resume.template_number = res.template_number
+        // this.resume.job_title = res.job_title
+        // this.resume.location = res.location
+        // this.resume.image = res.image
+        // this.resume.education = res.about_me
+        // this.resume = {...res.result}
+        this.resume = res.result
+        this.resume.personal_info.age = 22
+        // this.resume.image = res.result.image
+
+        this.loading = false;
+
+      }).catch(error => {
+        this.loading = true;
+        this.loading = false;
+        console.log(error)
+      })
+    }
+  },
   data() {
     return {
+      snackbar: {
+        color: null,
+        show: false,
+        message: "با موفقیت پاک شد"
+      },
       FORM_NAMES: {
         PERSONAL_INFO: 'اطلاعات شخصی',
         EDUCATIONAL_INFO: 'اطلاعات تحصیلی',
@@ -284,25 +347,65 @@ export default {
       })
     },
     async submit() {
-      console.log('in')
-      const y = JSON.stringify(this.resume)
-      // console.log(y)
-      // let fd = new FormData()
-      // fd.append(y)
-      console.log(y)
-      let api = 'http://localhost:3000/cv/create';
-      let res = await $fetch(api, {
-        method: 'POST',
-        body: JSON.stringify(this.resume),
-        headers: {
-          'access_token': this.$store.state.status.access_token,
-          'refresh_token': this.$store.state.status.refresh_token
-        },
-      }).then(res => {
-        console.log(res)
-      }).catch(error => {
-        console.log(error)
-      })
+      let id = this.$route.params.id
+      if (id != 0) {
+        console.log("y")
+
+        let api = 'http://localhost:3000/cv/update';
+        let res = await $fetch(api, {
+          method: 'PUT',
+          body: JSON.stringify(this.resume),
+          headers: {
+            'access_token': this.$store.state.status.access_token,
+            'refresh_token': this.$store.state.status.refresh_token
+          },
+        }).then(res => {
+          console.log(res)
+          this.snackbar = {
+            color: 'green',
+            show: true,
+            message: 'با موفقیت ذخیره شد'
+          }
+          this.$router.push('/dashboard');
+        }).catch(error => {
+          this.snackbar = {
+            color: 'red',
+            show: true,
+            message: 'خطایی رخ داده است'
+          }
+          console.log(error)
+        })
+      } else {
+        const y = JSON.stringify(this.resume)
+        console.log('2')
+        // let fd = new FormData()
+        // fd.append(y)
+        console.log(y)
+        let api = 'http://localhost:3000/cv/create';
+        let res = await $fetch(api, {
+          method: 'POST',
+          body: JSON.stringify(this.resume),
+          headers: {
+            'access_token': this.$store.state.status.access_token,
+            'refresh_token': this.$store.state.status.refresh_token
+          },
+        }).then(res => {
+          this.snackbar = {
+            color: 'green',
+            show: true,
+            message: 'با موفقیت ذخیره شد'
+          }
+          this.$router.push('/dashboard');
+          console.log(res)
+        }).catch(error => {
+          this.snackbar = {
+            color: 'red',
+            show: true,
+            message: 'خطایی رخ داده است'
+          }
+          console.log(error)
+        })
+      }
     }
   }
 }
