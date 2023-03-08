@@ -11,22 +11,18 @@
           <h2 class="text-4xl font-bold my-4 mb-10 text-center">ورود به حساب کاربری</h2>
           <div class="mt-2">
             <label for="email-address"
-                   :class=" ['text-sm font-medium text-gray-700',this.showUsernameError?'text-red-600':'']">نام
-              کاربری</label>
+                   :class=" ['text-sm font-medium text-gray-700',this.showUsernameError?'text-red-600':'']">
+              ایمیل</label>
             <div class="relative mt-2 max-w-96">
               <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd" clip-rule="evenodd"
-                        d="M10.0001 1.75C8.04735 1.75 6.46436 3.33299 6.46436 5.28571C6.46436 7.23844 8.04735 8.82143 10.0001 8.82143C11.9528 8.82143 13.5358 7.23844 13.5358 5.28571C13.5358 3.33299 11.9528 1.75 10.0001 1.75ZM4.96436 5.28571C4.96436 2.50457 7.21892 0.25 10.0001 0.25C12.7812 0.25 15.0358 2.50457 15.0358 5.28571C15.0358 8.06686 12.7812 10.3214 10.0001 10.3214C7.21892 10.3214 4.96436 8.06686 4.96436 5.28571Z"
-                        fill="black" fill-opacity="0.2"/>
-                  <path fill-rule="evenodd" clip-rule="evenodd"
-                        d="M2.31007 15.1661C3.86731 13.5023 6.39993 12.25 10.2862 12.25C14.1725 12.25 16.7051 13.5023 18.2623 15.1661C19.8 16.8088 20.3219 18.7847 20.3219 20.1429C20.3219 20.5571 19.9861 20.8929 19.5719 20.8929H1.00049C0.586275 20.8929 0.250488 20.5571 0.250488 20.1429C0.250488 18.7847 0.772444 16.8088 2.31007 15.1661ZM1.81427 19.3929H18.7581C18.6021 18.4301 18.1405 17.2309 17.1672 16.1911C15.9387 14.8786 13.8285 13.75 10.2862 13.75C6.74391 13.75 4.63367 14.8786 3.40519 16.1911C2.43191 17.2309 1.97034 18.4301 1.81427 19.3929Z"
-                        fill="black" fill-opacity="0.2"/>
+                <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M18 0C19.0544 0 19.9182 0.815878 19.9945 1.85074L20 2V14C20 15.0544 19.1841 15.9182 18.1493 15.9945L18 16H2C0.945638 16 0.0818349 15.1841 0.00548574 14.1493L0 14V2C0 0.945638 0.815878 0.0818349 1.85074 0.00548574L2 0H18ZM18 2H2V14H18V2ZM15.5563 4.15061L16.4395 5.94502L9.99816 9.11547L3.60713 5.94356L4.49626 4.15207L10.001 6.884L15.5563 4.15061Z" fill="black" fill-opacity="0.2"/>
                 </svg>
+
               </div>
               <input type="text" id="input-group-1" v-model="username"
                      :class="['border border-solid border-gray-300 rounded-xl w-full ps-10 text-sm p-3 h-12', this.showUsernameError?'border-red-600 text-red-600':'']"
-                     placeholder="نام کاربری خود را وارد کنید">
+                     placeholder="ایمیل خود را وارد کنید">
             </div>
           </div>
           <div class="mt-3">
