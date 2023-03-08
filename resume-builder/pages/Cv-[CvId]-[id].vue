@@ -1,46 +1,61 @@
 <template>
   <!-- <div class="mb-2 bg-black"> -->
-    <!-- <div class="mb-10 bg-black"> -->
-<!--      todo fix style-->
-    <v-row class="my-3 text-center px-5 mx-5">
-      <v-col cols="12" sm="4">
-        <v-select
+  <!-- <div class="mb-10 bg-black"> -->
+  <!--      todo fix style-->
+  <v-row class="mt-3 text-center px-5 mx-5" justify="center" align="start">
+    <v-col cols="12" sm="2">
+      <v-select
+          variant="outlined"
+          hide-details=true
           :items="fonts"
           v-model="data.font_family"
           item-value="value"
           item-text="title"
-        ></v-select>
-      </v-col>
-      <v-col cols="12" sm="4">
-        <v-btn @click="showColorPicker = !showColorPicker" variant="text" append-icon="mdi-chevron-down">
+      ></v-select>
+    </v-col>
+    <v-col cols="12" sm="1">
+      <v-btn @click="showColorPicker = !showColorPicker" variant="outlined" append-icon="mdi-chevron-down" height="56">
         انتخاب رنگ
-        </v-btn>
-        <div dir="rtl" v-if="showColorPicker">
-          <v-color-picker
-            v-model="data.color"
-            hide-sliders
-            hide-inputs
-            show-swatches
-          ></v-color-picker>
-      </div>
-      </v-col>
+      </v-btn>
+      <v-dialog
+          v-model="showColorPicker"
+          width="auto"
+      >
+        <v-card>
+          <v-card-text>
+            <v-color-picker
+                v-model="data.color"
+                hide-sliders
+                hide-inputs
+                show-swatches
+            ></v-color-picker>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn  color="green" variant="flat" block @click="showColorPicker = false">ذخیره رنگ</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-col>
 
-      <v-col cols="12" sm="4">
-        <v-text-field v-model="data.font_size" type="number" label="Number" append-outer-icon="add"
+    <v-col cols="12" sm="2">
+      <v-text-field hide-details=true variant="outlined" v-model="data.font_size" type="number" label="Number" append-outer-icon="add"
                     @click:append-outer="increment"
-                    prepend-icon="remove" @click:prepend="decrement" />
-      </v-col>
-    </v-row>
-    <!-- </div> -->
-    <cv1 :loading="loading" :data="data" v-if="cvTemplateId == 1"></cv1>
-    <cv2 :loading="loading" :data="data" v-else-if="cvTemplateId == 2"></cv2>
-    <cv4 :loading="loading" :data="data" v-else-if="cvTemplateId == 4"></cv4>
-    <div class="text-center">
-      <!--      todo-->
-      <v-btn @click="saveCv()">
+                     @click:prepend="decrement"/>
+    </v-col>
+
+
+  </v-row>
+  <v-row justify="center" align="start" class="mb-4">
+    <v-col cols="12" sm="2">
+      <v-btn color="green" variant="flat" block @click="saveCv()">
         ذخیره
       </v-btn>
-    </div>
+    </v-col>
+  </v-row>
+  <!-- </div> -->
+  <cv1 :loading="loading" :data="data" v-if="cvTemplateId == 1"></cv1>
+  <cv2 :loading="loading" :data="data" v-else-if="cvTemplateId == 2"></cv2>
+  <cv4 :loading="loading" :data="data" v-else-if="cvTemplateId == 4"></cv4>
   <!-- </div> -->
 </template>
 

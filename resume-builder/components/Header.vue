@@ -15,7 +15,9 @@
           </div>
           <div class="flex flex-1 items-center sm:gap-28 sm:justify-start ">
             <div class="flex flex-shrink-0 items-center">
-              <img src="/img/logo.png" class="h-16"/>
+              <NuxtLink to="/">
+                <img src="/img/logo.png" class="h-16"/>
+              </NuxtLink>
             </div>
             <div class="hidden sm:ml-6 sm:block  ">
               <div class="flex items-center gap-4 ">

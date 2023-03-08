@@ -7,7 +7,7 @@
 <!--          <img :src="!!data.image?data.image:'https://tailone.tailwindtemplate.net/src/img/dummy/avatar1.png'"-->
 <!--               class="max-w-full h-auto mx-auto rounded-full bg-gray-50 grayscale mb-4" alt="title image">-->
           <v-img lazy-src="https://tailone.tailwindtemplate.net/src/img/dummy/avatar1.png" :src="!!data.image?data.image:'https://tailone.tailwindtemplate.net/src/img/dummy/avatar1.png'"
-                 class="max-w-full h-auto mx-auto rounded-full bg-gray-50 grayscale mb-4" alt="title image">
+                 class="w-56 h-auto mx-auto rounded-full bg-gray-50 grayscale mb-4" alt="title image">
             <template v-slot:placeholder>
               <div class="d-flex align-center justify-center fill-height">
                 <v-progress-circular
