@@ -1,7 +1,6 @@
 <template>
   <div class="">
-    <div class="flex flex-row align-center hidden md:visible">
-      1
+    <div class="home">
       <div class="flex-1 text-center">
         <div class="flex flex-column mt-8">
           <span class="text-5xl text-[#FFC727] font-weight-bold md:text-9xl">
@@ -16,7 +15,7 @@
         <img src="/img/cv_main.png" alt="main-banner" class=" max-h-[90vh]">
       </div>
     </div>
-    <div class="flex flex-column align-center md:hidden">
+    <!-- <div class="flex flex-column align-center md:hidden">
       2
       <div class="flex-1 text-center">
         <div class="flex flex-column mt-8">
@@ -31,7 +30,7 @@
       <div class="align-self-end">
         <img src="/img/cv_main.png" alt="main-banner" class=" max-h-[90vh]">
       </div>
-    </div>
+    </div> -->
 <!--    <Cv_1/>-->
 <!--    <CV2/>-->
   </div>
@@ -44,4 +43,15 @@ import Cv_1 from "../components/cv_1";
 </script>
 
 <style scoped>
+.home{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+@media screen and (min-width: 767px) {
+  .home{
+    flex-direction: row;
+  }
+}
 </style>
