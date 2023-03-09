@@ -1,57 +1,58 @@
-<template>
+<template class="h-screen">
   <!-- <div class="mb-2 bg-black"> -->
   <!-- <div class="mb-10 bg-black"> -->
   <!--      todo fix style-->
-  <v-row class="mt-3 text-center px-5 mx-5" justify="center" align="start">
-    <v-col cols="12" sm="2">
-      <v-select
-          variant="outlined"
-          hide-details=true
-          :items="fonts"
-          v-model="data.font_family"
-          item-value="value"
-          item-text="title"
-      ></v-select>
-    </v-col>
-    <v-col cols="12" sm="1">
-      <v-btn @click="showColorPicker = !showColorPicker" variant="outlined" append-icon="mdi-chevron-down" height="56">
-        انتخاب رنگ
-      </v-btn>
-      <v-dialog
-          v-model="showColorPicker"
-          width="auto"
-      >
-        <v-card>
-          <v-card-text>
-            <v-color-picker
-                v-model="data.color"
-                hide-sliders
-                hide-inputs
-                show-swatches
-            ></v-color-picker>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn  color="green" variant="flat" block @click="showColorPicker = false">ذخیره رنگ</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-col>
+    <v-row v-if="isPublicShow" class="mt-3 text-center px-5 mx-5" justify="center" align="start">
+      <v-col cols="12" sm="2">
+        <v-select
+            variant="outlined"
+            hide-details=true
+            :items="fonts"
+            v-model="data.font_family"
+            item-value="value"
+            item-text="title"
+        ></v-select>
+      </v-col>
+      <v-col cols="12" sm="1">
+        <v-btn @click="showColorPicker = !showColorPicker" variant="outlined" append-icon="mdi-chevron-down" height="56">
+          انتخاب رنگ
+        </v-btn>
+        <v-dialog
+            v-model="showColorPicker"
+            width="auto"
+        >
+          <v-card>
+            <v-card-text>
+              <v-color-picker
+                  v-model="data.color"
+                  hide-sliders
+                  hide-inputs
+                  show-swatches
+              ></v-color-picker>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn  color="green" variant="flat" block @click="showColorPicker = false">ذخیره رنگ</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-col>
 
-    <v-col cols="12" sm="2">
-      <v-text-field hide-details=true variant="outlined" v-model.number="data.font_size" type="number" label="Number" append-outer-icon="add"
-                    @click:append-outer="increment"
-                     @click:prepend="decrement"/>
-    </v-col>
+      <v-col cols="12" sm="2">
+        <v-text-field hide-details=true variant="outlined" v-model.number="data.font_size" type="number" label="Number" append-outer-icon="add"
+                      @click:append-outer="increment"
+                      @click:prepend="decrement"/>
+      </v-col>
 
 
-  </v-row>
-  <v-row justify="center" align="start" class="mb-4">
-    <v-col cols="12" sm="2">
-      <v-btn color="green" variant="flat" block @click="saveCv()">
-        ذخیره
-      </v-btn>
-    </v-col>
-  </v-row>
+    </v-row>
+    <v-row v-if="isPublicShow" justify="center" align="start" class="mb-4">
+      <v-col cols="12" sm="2">
+        <v-btn color="green" variant="flat" block @click="saveCv()">
+          ذخیره
+        </v-btn>
+      </v-col>
+    </v-row>
+
   <!-- </div> -->
   <cv1 :loading="loading" :data="data" v-if="cvTemplateId == 1"></cv1>
   <cv2 :loading="loading" :data="data" v-else-if="cvTemplateId == 2"></cv2>
@@ -66,6 +67,7 @@
 
     <template v-slot:actions>
       <v-btn
+
           variant="flat"
           @click="snackbar.show = false"
       >
@@ -104,6 +106,16 @@ export default {
     // this.loading = false;
 
   },
+  mounted() {
+    // this.info = token;
+    // this.isLogin = this.info.isLoggedIn;
+    let access_token =  localStorage.getItem('access_token');
+    let refresh_token =  localStorage.getItem('refresh_token');
+
+    if (!!access_token || !!refresh_token){
+      this.isPublicShow = true
+    }
+  },
   data() {
     return {
       foo: 0,
@@ -112,6 +124,7 @@ export default {
       showColorPicker: false,
       loading: true,
       picker: null,
+      isPublicShow: false,
       snackbar: {
         color: null,
         show: false,

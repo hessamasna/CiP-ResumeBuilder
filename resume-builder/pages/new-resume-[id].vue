@@ -42,8 +42,11 @@
               <v-text-field :label="FORM_NAMES.PHONE" v-model="resume.personal_info.phone_number" counter
                             maxlength="11"/>
             </v-col>
-            <v-col cols="12" sm="8">
+            <v-col cols="12" sm="4">
               <v-text-field :label="FORM_NAMES.EMAIL" v-model="resume.personal_info.email"/>
+            </v-col>
+            <v-col cols="12" sm="4">
+              <v-text-field :label="FORM_NAMES.LOCATION" v-model="resume.personal_info.address"/>
             </v-col>
             <!--            <v-col cols="12" sm="4">-->
             <!--              <v-file-input label="عکس پروفایل" v-model="resume.image"/>-->
@@ -139,7 +142,7 @@
       <v-expansion-panel class="pa-5">
         <v-expansion-panel-title>راه های ارتباطی</v-expansion-panel-title>
         <v-expansion-panel-text class="mt-5">
-          <v-row v-for="media,index in resume.social_medias" :key="index" class="border-b">
+          <v-row v-for="(media,index) in resume.social_medias" :key="index" class="border-b">
             <v-col cols="6" sm="3">
               <v-select :items="socialMedias" item-value="value" item-text="title" label="راه ارتباطی"
                         v-model="media.plat_form"/>
@@ -257,6 +260,7 @@ export default {
         template_number: 1,
         job_title: '',
         location: '',
+        is_public: true,
         image: '',
         about_me: '',
         education: [{

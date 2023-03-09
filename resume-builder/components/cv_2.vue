@@ -6,7 +6,7 @@
         <div class="head_top text-white p-5 text-center bg-neutral-700">
           <div class="head_top_name border-2 border-white p-5 mb-3 font-weight-bold"
                :style="'font-size: '+titleFontSize(data.font_size)+'px'">
-            {{ data.personal_info.first_name }} {{data.personal_info.last_name}}
+            {{ data.personal_info.first_name }} {{ data.personal_info.last_name }}
           </div>
           <span :style="'font-size: '+data.font_size+'px'">{{ data.job_title }}</span>
         </div>
@@ -17,7 +17,9 @@
           </div>
           <div class="w-1/4 mr-4">
             <div class="font-bold	border-b-2 border-black">سن</div>
-            <div class="mt-1" :style="'font-size: '+data.font_size+'px'">{{ !!data.personal_info.age?data.personal_info.age:22 }}</div>
+            <div class="mt-1" :style="'font-size: '+data.font_size+'px'">
+              {{ !!data.personal_info.age ? data.personal_info.age : 22 }}
+            </div>
           </div>
           <div class="w-1/4 mr-4">
             <div class="font-bold	border-b-2 border-black">شماره تلفن</div>
@@ -45,14 +47,22 @@
             </div>
             <div class="details_section_details p-2" :style="'font-size: '+data.font_size+'px'">
               <div v-for="(item,index) in data.experience" :key="index" class="mb-2">
-                <div class="font-bold">{{ item.title }}</div>
-                <div>{{ item.company }}</div>
-                <div class="text-slate-600">
-                  {{ item.start }} - {{ item.end }}
+                <div class="flex">
+                  <v-icon :color="data.color">mdi-square-small</v-icon>
+                  <div>
+                    <div class="font-bold">{{ item.title }}</div>
+                    <div>{{ item.company }}</div>
+                    <div class="text-slate-600">
+                      {{ item.start }} - {{ item.end }}
+                    </div>
+                    <div>
+                      {{ item.description }}
+                    </div>
+                  </div>
+
                 </div>
-                <div>
-                  {{ item.description }}
-                </div>
+
+
               </div>
             </div>
           </div>
@@ -77,15 +87,21 @@
             </div>
             <div class="details_section_details p-2" :style="'font-size: '+data.font_size+'px'">
               <div v-for="(item,index) in data.education" :key="index" class="mb-2">
-                <div class="font-bold">{{ item.degree }}</div>
-                <div class="font-semibold	">{{ item.school }}-{{ item.major }}</div>
-                <div>{{ item.place }}</div>
-                <div class="text-slate-600">
-                  {{ item.start }} - {{ item.end }}
+                <div class="flex">
+                  <v-icon :color="data.color">mdi-square-small</v-icon>
+                  <div>
+                    <div class="font-bold">{{ item.degree }}</div>
+                    <div class="font-semibold	">{{ item.school }}-{{ item.major }}</div>
+                    <div>{{ item.place }}</div>
+                    <div class="text-slate-600">
+                      {{ item.start }} - {{ item.end }}
+                    </div>
+                  </div>
                 </div>
-<!--                <div>-->
-<!--                  {{ item.description }}-->
-<!--                </div>-->
+
+                <!--                <div>-->
+                <!--                  {{ item.description }}-->
+                <!--                </div>-->
               </div>
             </div>
           </div>

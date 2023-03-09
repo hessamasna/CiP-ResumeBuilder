@@ -126,7 +126,7 @@
             <div class="grid grid-cols-1 gap-4">
               <div class="mr-8" v-for="(lang) in data.social_medias">
                 <NuxtLink :to="lang.link" target="_blank" class=" mx-3">
-                  {{ lang.plat_form }}
+                  {{ lang.link }}
                 </NuxtLink>
               </div>
             </div>
