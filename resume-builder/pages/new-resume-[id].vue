@@ -22,6 +22,14 @@
             </v-col>
           </v-row>
 
+          <v-row>
+            <v-col cols="12">
+              <v-checkbox v-model="resume.is_public" label="رزومه من عمومی باشد" color="success">
+                <!-- {{ FORM_NAMES.IS_PUBLIC_LABEL }} -->
+              </v-checkbox>
+            </v-col>
+          </v-row>
+
         </v-expansion-panel-text>
       </v-expansion-panel>
       <v-expansion-panel class="pa-5" :title="FORM_NAMES.PERSONAL_INFO">
@@ -69,10 +77,13 @@
             <v-col cols=12 sm="3">
               <v-text-field label="نام دانشگاه" v-model="education.school"/>
             </v-col>
-            <v-col cols=12 sm="3">
+            <v-col cols=12 sm="2">
+              <v-text-field label="رشته" v-model="education.major"/>
+            </v-col>
+            <v-col cols=12 sm="2">
               <v-text-field label="سال آغار" v-model="education.start"/>
             </v-col>
-            <v-col cols=12 sm="3">
+            <v-col cols=12 sm="2">
               <v-text-field label="سال پایان" v-model="education.end"/>
             </v-col>
           </v-row>
@@ -243,6 +254,7 @@ export default {
         LAST_NAME: 'نام خانوادگی',
         ABOUT_ME: 'درباره من',
         ABOUT_ME_PLACEHOLDER: 'چند خطی درباره من',
+        IS_PUBLIC_LABEL: 'رزومه من دارای لینک عمومی باشد.'
       },
       resume: {
         font_size: 15,
@@ -324,6 +336,7 @@ export default {
           {
             degree: '',
             school: '',
+            major: '',
             start: '',
             end: ''
           }
@@ -353,7 +366,7 @@ export default {
     async submit() {
       let id = this.$route.params.id
       if (id != 0) {
-        console.log("y")
+        // console.log("y")
 
         let api = 'http://localhost:3000/cv/update';
         let res = await $fetch(api, {
@@ -364,7 +377,7 @@ export default {
             'refresh_token': this.$store.state.status.refresh_token
           },
         }).then(res => {
-          console.log(res)
+          // console.log(res)
           this.snackbar = {
             color: 'green',
             show: true,
@@ -381,10 +394,10 @@ export default {
         })
       } else {
         const y = JSON.stringify(this.resume)
-        console.log('2')
+        // console.log('2')
         // let fd = new FormData()
         // fd.append(y)
-        console.log(y)
+        // console.log(y)
         let api = 'http://localhost:3000/cv/create';
         let res = await $fetch(api, {
           method: 'POST',
@@ -400,7 +413,7 @@ export default {
             message: 'با موفقیت ذخیره شد'
           }
           this.$router.push('/dashboard');
-          console.log(res)
+          // console.log(res)
         }).catch(error => {
           this.snackbar = {
             color: 'red',

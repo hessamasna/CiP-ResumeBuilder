@@ -152,7 +152,7 @@ export default {
       this.foo = parseInt(this.foo, 10) + 1
     },
     decrement() {
-      console.log(this.foo)
+      // console.log(this.foo)
       if (this.foo === 0) return;
 
       this.foo = parseInt(this.foo, 10) - 1

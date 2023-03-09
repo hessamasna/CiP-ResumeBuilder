@@ -99,7 +99,7 @@ export default {
     } else {
       this.loading = true;
       let api = 'http://localhost:3000/cv/getAll/' + this.$store.state.status.id;
-      console.log(this.$store.state.cookie)
+      // console.log(this.$store.state.cookie)
       let res = await $fetch(api, {
         method: 'GET',
         headers: {
