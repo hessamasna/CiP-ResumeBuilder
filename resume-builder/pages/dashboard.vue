@@ -73,7 +73,7 @@
     </div>
     <v-snackbar
         v-model="snackbar.show"
-        :timeout="5000"
+        timeout="2000"
         :color="snackbar.color"
     >
       {{ snackbar.message }}

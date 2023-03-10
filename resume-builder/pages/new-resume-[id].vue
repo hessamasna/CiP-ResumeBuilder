@@ -175,7 +175,7 @@
     <v-btn @click="submit" color="green" variant="flat" block class="text-center mt-8 px-8">ذخیره</v-btn>
     <v-snackbar
         v-model="snackbar.show"
-        :timeout="5000"
+        timeout="2000"
         :color="snackbar.color"
 
 
