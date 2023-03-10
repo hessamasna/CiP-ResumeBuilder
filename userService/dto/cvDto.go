@@ -60,6 +60,6 @@ type SkillDto struct {
 type SocialMediaDto struct {
 	ID       int    `json:"id"`
 	CVID     uint   `json:"cv_id"`
-	PlatForm string `json:"plat_form"`
+	Platform string `json:"plat_form"`
 	Link     string `json:"link"`
 }
