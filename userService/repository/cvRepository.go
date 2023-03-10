@@ -114,7 +114,7 @@ func AddSocialMedia(socialMediaDto dto.SocialMediaDto) (*dto.SocialMediaDto, *er
 }
 
 func AddEducationList(eduList []dto.EducationDto, cvID uint) *errors.Base_error {
-	if eduList == nil{
+	if eduList == nil {
 		return nil
 	}
 	var eduEntities []entities.Education
@@ -201,7 +201,7 @@ func AddSocialMediaList(socialMedias []dto.SocialMediaDto, cvID uint) *errors.Ba
 	for _, socialMediaDto := range socialMedias {
 		socialMedia := entities.SocialMedia{
 			CVID:     cvID,
-			Platform: socialMediaDto.PlatForm,
+			Platform: socialMediaDto.Platform,
 			Link:     socialMediaDto.Link,
 		}
 		if err := tx.Create(&socialMedia).Error; err != nil {
@@ -329,6 +329,8 @@ func GetCvById(id int) (*dto.CVDto, *errors.Base_error) {
 	if err != nil {
 		return nil, err
 	}
+
+	fmt.Println("social_media:", social_medias)
 
 	cvDto.Educations = educations
 	cvDto.Skills = skills
@@ -618,7 +620,6 @@ func DeleteCvByID(id int) *errors.Base_error {
 		return error
 	}
 
-
 	error = DeleteEducationList(educations)
 	if error != nil {
 		return error
@@ -786,7 +787,6 @@ func DeleteSocialMediaList(socialMediaDTOs []dto.SocialMediaDto) *errors.Base_er
 	return nil
 }
 
-
 func DeleteExperienceList(experienceDTOs []dto.ExperienceDto) *errors.Base_error {
 	if experienceDTOs == nil || len(experienceDTOs) == 0 {
 		return nil
@@ -876,4 +876,3 @@ func DeleteEducationList(educationDTOs []dto.EducationDto) *errors.Base_error {
 
 	return nil
 }
-
