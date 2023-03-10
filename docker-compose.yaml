@@ -69,6 +69,10 @@ services:
       GF_DATABASE_NAME: postgres
     volumes:
       - ./grafana:/var/lib/grafana
+    networks:
+      default:
+        aliases:
+          - grafana
 
   app:
     restart: on-failure
@@ -79,9 +83,29 @@ services:
     ports:
       - '3000:3000'
     depends_on:
-      - prometheus
       - user-service-db
     env_file:
       - ./userService/.env
     volumes:
       - ./userService/app/migrations:/app/migrations
+    networks:
+      default:
+        aliases:
+          - app
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    restart: on-failure
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "9050:9050"
+    depends_on:
+      - app
+      - grafana
+      - prometheus
+    networks:
+      default:
+        aliases:
+          - nginx
