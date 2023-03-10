@@ -2,7 +2,7 @@
   <!-- <div class="mb-2 bg-black"> -->
   <!-- <div class="mb-10 bg-black"> -->
   <!--      todo fix style-->
-  <lock v-if="!isPublicShow"></lock>
+  <lock v-if="!data.is_public"></lock>
   <v-row v-if="isPublicShow" class="mt-3 text-center px-5 mx-5" justify="center" align="start">
     <v-col cols="12" sm="2">
       <v-select
@@ -55,7 +55,7 @@
     </v-col>
   </v-row>
 
-  <div v-if="isPublicShow">
+  <div v-if="data.is_public">
     <cv1 :loading="loading" :data="data" v-if="cvTemplateId == 1"></cv1>
     <cv2 :loading="loading" :data="data" v-else-if="cvTemplateId == 2"></cv2>
     <cv4 :loading="loading" :data="data" v-else-if="cvTemplateId == 4"></cv4>
